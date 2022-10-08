@@ -124,7 +124,7 @@ def playback(audio, activationing):
 
     elif myText == "suspende el PC " or myText == "suspende el ordenador " or myText == "suspende el equipo " \
             or myText == "suspende el sistema " or myText == "suspende la sesión":
-        respuesta = "Vale, voy a apagar tu ordenador. ¡Nos vemos cuando lo vuelvas a encender!"
+        respuesta = "Okay, poniendo el sistema en modo suspensión."
         tts(respuesta, "suspend", False, "")
 
     elif "abre " in myText:
@@ -190,7 +190,8 @@ def tts(audio, name, isprogram, text):
 
         elif name == "suspend":
             keystroke("")
-            system("rundll32.exe powrProf.dll,SetSuspendState")
+            system("powercfg -h off")
+            system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
 
         else:
             keystroke("")
