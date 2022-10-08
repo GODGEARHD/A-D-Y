@@ -1,7 +1,6 @@
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
-from playsound import PlaysoundException
 from os import popen, remove, system
 from pynput.keyboard import Key, Controller
 from sys import exit
