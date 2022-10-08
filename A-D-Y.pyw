@@ -6,6 +6,7 @@ from pynput.keyboard import Key, Controller
 from sys import exit
 from random import randint
 from time import sleep
+import webbrowser
 
 r = sr.Recognizer()
 keyboard = Controller()
@@ -127,6 +128,10 @@ def playback(audio, activationing):
         respuesta = "Okay, poniendo el sistema en modo suspensión."
         tts(respuesta, "suspend", False, "")
 
+    elif "busca en google " in myText or "busca en Google " in myText:
+        respuesta = "Vale, espera que lo busco y te lo enseño"
+        tts(respuesta, "search", False, myText[16:-1])
+
     elif "abre " in myText:
         respuesta = "okay, abriendo " + myText[5:-1]
         tts(respuesta, myText[5:-1], True, "")
@@ -192,6 +197,10 @@ def tts(audio, name, isprogram, text):
             keystroke("")
             system("powercfg -h off")
             system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
+
+        elif name == "search":
+            system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
+            keystroke("")
 
         else:
             keystroke("")
