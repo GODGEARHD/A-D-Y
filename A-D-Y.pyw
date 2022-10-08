@@ -6,6 +6,7 @@ from os import popen, remove, system
 from pynput.keyboard import Key, Controller
 from sys import exit
 from random import randint
+from time import sleep
 
 r = sr.Recognizer()
 keyboard = Controller()
@@ -23,6 +24,7 @@ def start(phase, active):
         respuesta = respuestas[randint(0, 1)]
     elif phase == 1:
         keystroke("")
+        sleep(2.33)
         respuesta = "¿Sí?"
     myAudio = gTTS(text=respuesta, lang='es-ES', slow=False)
     myAudio.save("audio.mp3")
@@ -38,9 +40,12 @@ def main(activated):
         print("Di algo..")
         playsound("start-listen.wav")
         try:
+            sleep(0.3)
             audio = r.listen(source, timeout=5, phrase_time_limit=5)
             playback(audio, activated)
         except Exception:
+            playsound("stop-listen.wav")
+            keystroke("")
             pass
 
 
@@ -58,7 +63,7 @@ def playback(audio, activationing):
         respuesta = "alo prresidentess"
         tts(respuesta, "", False, "")
 
-    elif myText == "me cago en tu puta madre " or myText == "mecagoentuputamadre ":
+    elif myText == "me cago en tu madre " or myText == "mecagoentuputamadre ":
         respuesta = "Y yo en la tuya que se me abre hijueperra"
         tts(respuesta, "", False, "")
 
@@ -89,15 +94,17 @@ def playback(audio, activationing):
         tts(respuesta, "previous", False, "")
 
     elif myText == "preséntate " or myText == "quién eres ":
-        respuesta = "Vale, allá voy. Hola, me llamo ADY, acortado de \"Advanced Development auxiliarY\". Soy un " \
-                    "asistente de voz creado por Carlos Maristegui, o End, como prefieras llamarle. Aún estoy en " \
+        respuesta = "Vale, allá voy. Hola, me llamo ADY, acortado de \"Advanced Development auxiliarY\". Soy una " \
+                    "asistente de voz creada por Carlos Maristegui, o End, como prefieras llamarle. Aún estoy en " \
                     "desarrollo, pero creo que ya soy capaz de hacer cositas interesantes. Por ejemplo, puedo abrir " \
                     "el programa que quieras, puedo reproducir o pausar tu música, también puedo ir a la canción " \
-                    "anterior, ir a la siguiente, puedo imitar a IlloJuan... ¿No me crees? Espera, que te hago una " \
-                    "demostración. Aló prresidentess. ¿A que se me da bien? Si me insultas , que espero que no lo " \
-                    "hagas, por el bien de tu ordenador, puedo responderte con otro insulto. Además, si me dices " \
-                    "algo que no entiendo, te diré en voz alta lo que he entendido, para que le des una vuelta, " \
-                    "porque a lo mejor la culpa es tuya por no vocalizar. En resumen, soy ADY, y soy tu nueva " \
+                    "anterior, ir a la siguiente, y también puedo imitar a IlloJuan... ¿No me crees? Espera, que te " \
+                    "hago una demostración. Aló prresidentess. ¿A que se me da bien? Además, Si me insultas , " \
+                    "que espero que no lo hagas por el bien de tu ordenador, puedo responderte con otro insulto. " \
+                    "¿Quieres saber más? Bueno, si me dices algo que no entiendo, te diré en voz alta lo que he " \
+                    "entendido, para que así puedas darle una vuelta, porque a lo mejor la culpa es tuya por no " \
+                    "vocalizar. Por último, puedo encender, reiniciar, suspender, o bloquear tu ordenador, y así " \
+                    "no tienes que gastar energías en darle al botoncito. En resumen, soy ADY, y soy tu nueva " \
                     "asistente personal. ¡Encantada de conocerte!"
         tts(respuesta, "presentation", False, "")
 
@@ -152,6 +159,7 @@ def tts(audio, name, isprogram, text):
             myError.save("audio.mp3")
             playsound("audio.mp3")
             remove("audio.mp3")
+            keystroke("")
 
         elif name == "bye":
             keystroke("")
