@@ -6,7 +6,6 @@ from pynput.keyboard import Key, Controller
 from sys import exit
 from random import randint
 from time import sleep
-import webbrowser
 
 r = sr.Recognizer()
 keyboard = Controller()
