@@ -203,7 +203,6 @@ def tts(audio, name, isprogram, text):
             keystroke("")
 
         else:
-
             keystroke("")
 
     except Exception:
