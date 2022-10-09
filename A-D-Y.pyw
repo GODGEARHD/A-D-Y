@@ -1,6 +1,6 @@
 """
 IMPORTANTE!!!!
-
+.
 Este programa está pensado para ser usado junto con SAO Utils, donde tendrás que tener asignado Ctrl+Alt+Shift+U
 como atajo de teclado para abrir/cerrar su interfaz.
 
