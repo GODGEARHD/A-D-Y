@@ -49,13 +49,13 @@ def main(activated):
 
     with sr.Microphone() as origin:
         print("Say something...")
-        playsound("../start-listen.wav")
+        playsound("start-listen.wav")
         try:
             sleep(0.3)
             audio = r.listen(origin, timeout=5, phrase_time_limit=5)
             playback(audio, activated)
         except Exception:
-            playsound("../stop-listen.wav")
+            playsound("stop-listen.wav")
             keystroke("")
             pass
 
@@ -68,7 +68,7 @@ def playback(audio, activationing):
         pass
     myText = myText + " "
     print(myText)
-    playsound("../stop-listen.wav")
+    playsound("stop-listen.wav")
 
     if myText == "what's up dog ":
         answer = "Yo! Wassup?"
@@ -157,6 +157,10 @@ def playback(audio, activationing):
         answer = "Today is " + date.date().strftime("%A, %d of %B, %Y")
         tts(answer, "", False, "")
 
+    elif myText == "switch to Spanish " or myText == "cambia a inglés ":
+        respuesta = "Okay, switching main program's language to: Spanish"
+        tts(respuesta, "language", False, "")
+
     elif "open " in myText:
         answer = "Okay, opening " + myText[5:-1]
         tts(answer, myText[5:-1], True, "")
@@ -222,6 +226,9 @@ def tts(audio, name, isprogram, text):
             keystroke("")
             system("powercfg -h off")
             system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
+
+        elif name == "language":
+            exit()
 
         elif name == "search":
             system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")

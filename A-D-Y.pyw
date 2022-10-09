@@ -24,7 +24,7 @@ r = sr.Recognizer()
 keyboard = Controller()
 numError = 0
 activation = False
-keywords = ["habla", "háblame", "ADI", "oye"]
+keywords = ["habla", "háblame", "ADI"]
 
 
 def start(phase, active):
@@ -155,6 +155,10 @@ def playback(audio, activationing):
         respuesta = "Hoy es " + date.date().strftime("%A, %d de %B de %Y")
         tts(respuesta, "", False, "")
 
+    elif myText == "cambia inglés " or myText == "cambia a inglés ":
+        respuesta = "Vale, cambiando el idioma del programa principal a: Inglés"
+        tts(respuesta, "language", False, "")
+
     elif "abre " in myText:
         respuesta = "okay, abriendo " + myText[5:-1]
         tts(respuesta, myText[5:-1], True, "")
@@ -220,6 +224,10 @@ def tts(audio, name, isprogram, text):
             keystroke("")
             system("powercfg -h off")
             system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
+
+        elif name == "language":
+            system("python \".\\en-US\\A-D-Y.pyw\"")
+            start(0, activation)
 
         elif name == "search":
             system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
