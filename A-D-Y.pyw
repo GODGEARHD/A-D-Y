@@ -4,7 +4,7 @@ IMPORTANTE!!!!
 Este programa está pensado para ser usado junto con SAO Utils, donde tendrás que tener asignado Ctrl+Alt+Shift+U
 como atajo de teclado para abrir/cerrar su interfaz.
 
-Aunque, si no quieres usar SAO Utils, este programa debería funcionar perfectamente y sin problemas. Pero ten cuidado,
+Aunque, si no quieres utilizar SAO Utils, este programa debería funcionar perfectamente y sin problemas. Pero ten cuidado,
 ya que si tienes asignado el atajo anteriormente mencionado, ADY lo usará y hará lo que sea que haga ese atajo.
 """
 
