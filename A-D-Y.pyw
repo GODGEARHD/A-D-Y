@@ -1,3 +1,5 @@
+import locale
+
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
@@ -6,6 +8,7 @@ from pynput.keyboard import Key, Controller
 from sys import exit
 from random import randint
 from time import sleep
+from datetime import datetime
 
 r = sr.Recognizer()
 keyboard = Controller()
@@ -130,6 +133,17 @@ def playback(audio, activationing):
     elif "busca en google " in myText or "busca en Google " in myText:
         respuesta = "Vale, espera que lo busco y te lo enseño"
         tts(respuesta, "search", False, myText[16:-1])
+
+    elif myText == "dime la hora " or myText == "qué hora es ":
+        date = datetime.now()
+        respuesta = "La hora actual es " + date.time().strftime("%H:%M")
+        tts(respuesta, "", False, "")
+
+    elif myText == "dime la fecha " or myText == "qué día es hoy ":
+        locale.getlocale()
+        date = datetime.now()
+        respuesta = "Hoy es " + date.date().strftime("%A, %d de %B de %Y")
+        tts(respuesta, "", False, "")
 
     elif "abre " in myText:
         respuesta = "okay, abriendo " + myText[5:-1]
