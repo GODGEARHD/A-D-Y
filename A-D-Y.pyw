@@ -1,3 +1,13 @@
+"""
+IMPORTANTE!!!!
+
+Este programa está pensado para ser usado junto con SAO Utils, donde tendrás que tener asignado Ctrl+Alt+Shift+U
+como atajo de teclado para abrir/cerrar su interfaz.
+
+Aunque, si no quieres usar SAO Utils, este programa debería funcionar perfectamente y sin problemas. Pero ten cuidado,
+ya que si tienes asignado el atajo anteriormente mencionado, ADY lo usará y hará lo que sea que haga ese atajo.
+"""
+
 import locale
 import speech_recognition as sr
 from gtts import gTTS
@@ -38,7 +48,7 @@ def start(phase, active):
 def main(activated):
 
     with sr.Microphone() as source:
-        print("Di algo..")
+        print("Di algo...")
         playsound("start-listen.wav")
         try:
             sleep(0.3)
@@ -90,7 +100,7 @@ def playback(audio, activationing):
         tts(respuesta, "next", False, "")
 
     elif myText == "vuelve una canción hacia atrás " or myText == "pon la última canción " \
-            or myText == "siguiente canción ":
+            or myText == "canción anterior ":
         respuesta = "Okay, vuelvo a la canción anterior"
         tts(respuesta, "previous", False, "")
 
