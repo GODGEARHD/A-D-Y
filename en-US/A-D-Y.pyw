@@ -167,7 +167,7 @@ def playback(audio, activationing):
             answer = "Today is " + date.date().strftime("%A, %d of %B, %Y")
             tts(answer, "", False, "")
 
-        case myText if myText == "switch to Spanish " or myText == "cambia a inglés ":
+        case myText if myText == "switch to Spanish " or myText == "change to Spanish ":
             respuesta = "Okay, switching main program's language to: Spanish"
             tts(respuesta, "language", False, "")
 
