@@ -18,12 +18,20 @@ from sys import exit
 from random import randint
 from time import sleep
 from datetime import datetime
+import wmi
 
 r = sr.Recognizer()
 keyboard = Controller()
 numError = 0
 activation = False
 keywords = ["speak", "ADI", "hey"]
+running = False
+
+sao = wmi.WMI()
+for process in sao.Win32_Process():
+    if "SAO Utils.exe" == process.Name:
+        running = True
+        break
 
 
 def start(phase, active):
@@ -232,8 +240,11 @@ def tts(audio, name, isprogram, text):
                 system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
 
             case "language":
-                system("python \".\\en-US\\A-D-Y.pyw\"")
-                start(0, activation)
+                exit()
+                """f = open("../config.ini", "w+")
+                f.write("language = 'es-ES' ")
+                f.close()
+                exit()"""
 
             case "search":
                 system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
@@ -265,14 +276,15 @@ def keystroke(media):
             keyboard.press(Key.media_next)
 
         case _:
-            keyboard.press(Key.ctrl)
-            keyboard.press(Key.alt)
-            keyboard.press(Key.shift)
-            keyboard.press("u")
-            keyboard.release(Key.ctrl)
-            keyboard.release(Key.alt)
-            keyboard.release(Key.shift)
-            keyboard.release("u")
+            if running:
+                keyboard.press(Key.ctrl)
+                keyboard.press(Key.alt)
+                keyboard.press(Key.shift)
+                keyboard.press("u")
+                keyboard.release(Key.ctrl)
+                keyboard.release(Key.alt)
+                keyboard.release(Key.shift)
+                keyboard.release("u")
 
 
 def background(origen):
