@@ -50,20 +50,20 @@ def start(phase, active):
     print(answer)
     playsound("audio.mp3")
     remove("audio.mp3")
-    main(active)
+    return main(active)
 
 
 def main(activated):
 
     with sr.Microphone() as origin:
         print("Say something...")
-        playsound("start-listen.wav")
+        playsound(".\\enUS\\start-listen.wav")
         try:
             sleep(0.3)
             audio = r.listen(origin, timeout=5, phrase_time_limit=5)
-            playback(audio, activated)
+            return playback(audio, activated)
         except Exception:
-            playsound("stop-listen.wav")
+            playsound(".\\enUS\\stop-listen.wav")
             keystroke("")
             pass
 
@@ -76,7 +76,7 @@ def playback(audio, activationing):
         pass
     myText = myText + " "
     print(myText)
-    playsound("stop-listen.wav")
+    playsound(".\\enUS\\stop-listen.wav")
 
     match myText:
 
@@ -169,7 +169,7 @@ def playback(audio, activationing):
 
         case myText if myText == "switch to Spanish " or myText == "change to Spanish ":
             respuesta = "Okay, switching main program's language to: Spanish"
-            tts(respuesta, "language", False, "")
+            return tts(respuesta, "language", False, "")
 
         case myText if "open " in myText:
             answer = "Okay, opening " + myText[5:-1]
@@ -200,7 +200,7 @@ def tts(audio, name, isprogram, text):
         match name:
 
             case "error":
-                myError = gTTS(text=text, lang='es-ES', slow=False)
+                myError = gTTS(text=text, lang='en-US', slow=False)
                 myError.save("audio.mp3")
                 playsound("audio.mp3")
                 remove("audio.mp3")
@@ -240,11 +240,10 @@ def tts(audio, name, isprogram, text):
                 system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
 
             case "language":
-                exit()
-                """f = open("../config.ini", "w+")
+                f = open("config.ini", "w+")
                 f.write("language = 'es-ES' ")
                 f.close()
-                exit()"""
+                return "spanish"
 
             case "search":
                 system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
@@ -303,10 +302,17 @@ def background(origen):
         print("Waiting to listen to the keyword...")
 
 
+def __init__():
+    toggle = True
+    returned = start(0, toggle)
+    if returned == "spanish":
+        return returned
+    else:
+        sr.Recognizer()
+        with sr.Microphone() as fuente:
+            while True:
+                background(fuente)
+
+
 if __name__ == "__main__":
-    activation = True
-    start(0, activation)
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        while True:
-            background(source)
+    __init__()

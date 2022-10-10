@@ -51,20 +51,20 @@ def start(phase, active):
     print(respuesta)
     playsound("audio.mp3")
     remove("audio.mp3")
-    main(active)
+    return main(active)
 
 
 def main(activated):
 
     with sr.Microphone() as source:
         print("Di algo...")
-        playsound("start-listen.wav")
+        playsound(".\\esES\\start-listen.wav")
         try:
             sleep(0.3)
             audio = r.listen(source, timeout=5, phrase_time_limit=5)
-            playback(audio, activated)
+            return playback(audio, activated)
         except Exception:
-            playsound("stop-listen.wav")
+            playsound(".\\esES\\stop-listen.wav")
             keystroke("")
             pass
 
@@ -77,7 +77,7 @@ def playback(audio, activationing):
         pass
     myText = myText + " "
     print(myText)
-    playsound("stop-listen.wav")
+    playsound(".\\esES\\stop-listen.wav")
 
     match myText:
 
@@ -122,7 +122,7 @@ def playback(audio, activationing):
                     "desarrollo, pero creo que ya soy capaz de hacer cositas interesantes. Por ejemplo, puedo abrir " \
                     "el programa que quieras, puedo reproducir o pausar tu música, también puedo ir a la canción " \
                     "anterior, ir a la siguiente, y también puedo imitar a IlloJuan... ¿No me crees? Espera, que te " \
-                    "hago una demostración. Aló prresidentess. ¿A que se me da bien? Además, Si me insultas , " \
+                    "hago una demostración. Aló prresidentess. ¿A que se me da bien? Además, si me insultas, " \
                     "que espero que no lo hagas por el bien de tu ordenador, puedo responderte con otro insulto. " \
                     "¿Quieres saber más? Bueno, si me dices algo que no entiendo, te diré en voz alta lo que he " \
                     "entendido, para que así puedas darle una vuelta, porque a lo mejor la culpa es tuya por no " \
@@ -171,7 +171,7 @@ def playback(audio, activationing):
 
         case myText if myText == "cambia inglés " or myText == "cambia a inglés ":
             respuesta = "Vale, cambiando el idioma del programa principal a: Inglés"
-            tts(respuesta, "language", False, "")
+            return tts(respuesta, "language", False, "")
 
         case myText if "abre " in myText:
             respuesta = "okay, abriendo " + myText[5:-1]
@@ -187,7 +187,7 @@ def tts(audio, name, isprogram, text):
     try:
         if name == "presentation":
             print(audio)
-            playsound("presentation.mp3")
+            playsound(".\\esES\\presentation.mp3")
         else:
             myAudio = gTTS(text=audio, lang='es-ES', slow=False)
             myAudio.save("audio.mp3")
@@ -242,12 +242,10 @@ def tts(audio, name, isprogram, text):
                 system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
 
             case "language":
-                system("python \".\\en-US\\A-D-Y.pyw\"")
-                start(0, activation)
-                """f = open("../config.ini", "w+")
+                f = open("config.ini", "w")
                 f.write("language = 'en-US' ")
                 f.close()
-                exit()"""
+                return "english"
 
             case "search":
                 system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
@@ -307,10 +305,17 @@ def background(origen):
         print("Esperando a escuchar la palabra clave...")
 
 
+def __init__():
+    toggle = True
+    returned = start(0, toggle)
+    if returned == "english":
+        return returned
+    else:
+        sr.Recognizer()
+        with sr.Microphone() as fuente:
+            while True:
+                background(fuente)
+
+
 if __name__ == "__main__":
-    activation = True
-    start(0, activation)
-    r = sr.Recognizer()
-    with sr.Microphone() as fuente:
-        while True:
-            background(fuente)
+    __init__()
