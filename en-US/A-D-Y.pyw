@@ -70,45 +70,47 @@ def playback(audio, activationing):
     print(myText)
     playsound("stop-listen.wav")
 
-    if myText == "what's up dog ":
-        answer = "Yo! Wassup?"
-        tts(answer, "", False, "")
+    match myText:
 
-    elif myText == "f*** you b**** " or myText == "shut your b**** ass up " or myText == "fuck you bitch " or \
-            myText == "shut your bitch ass up ":
-        answer = "Ah nigga don't hate me cuz I'm beautiful nigga. Maybe if you got rid of that old geegee ass " \
-                 "haircut you'd got some bitches on your dick. Oh, better yet, maybe Tanisha'll call your dog " \
-                 "ass if she ever stop fucking with that brain surgeon or lawyer she fucking with. Niggaaa"
-        tts(answer, "", False, "")
+        case "what's up dog ":
+            answer = "Yo! Wassup?"
+            tts(answer, "", False, "")
 
-    elif myText == "shut yourself down ":
-        answer = "All right, if you need something from me, just tap the green button on the top left corner in SAO " \
-                 "Utils. See you!"
-        tts(answer, "bye", False, "")
+        case myText if myText == "f*** you b**** " or myText == "shut your b**** ass up " \
+                       or myText == "fuck you bitch " or myText == "shut your bitch ass up ":
+            answer = "Ah nigga don't hate me cuz I'm beautiful nigga. Maybe if you got rid of that old geegee ass " \
+                     "haircut you'd got some bitches on your dick. Oh, better yet, maybe Tanisha'll call your dog " \
+                     "ass if she ever stop fucking with that brain surgeon or lawyer she fucking with. Niggaaa"
+            tts(answer, "", False, "")
 
-    elif myText == "shut up " or myText == "cállate " or myText == "nothing ":
-        answer = "All right, if you need something just let me know."
-        tts(answer, "", False, "")
+        case "shut yourself down ":
+            answer = "All right, if you need something from me, just tap the green button on the top left corner " \
+                     "in SAO Utils. See you!"
+            tts(answer, "bye", False, "")
 
-    elif myText == "put the music " or myText == "hit play " or myText == "put music ":
-        answer = "Okay, playing multimedia"
-        tts(answer, "play", False, "")
+        case myText if myText == "shut up " or myText == "cállate " or myText == "nothing ":
+            answer = "All right, if you need something just let me know."
+            tts(answer, "", False, "")
 
-    elif myText == "stop the music " or myText == "hit pause ":
-        answer = "Gucci, pausing multimedia"
-        tts(answer, "play", False, "")
+        case myText if myText == "put the music " or myText == "hit play " or myText == "put music ":
+            answer = "Okay, playing multimedia"
+            tts(answer, "play", False, "")
 
-    elif myText == "go to the next song " or myText == "pasa a otra canción " or myText == "next song ":
-        answer = "Okay, going to the next song in the list"
-        tts(answer, "next", False, "")
+        case myText if myText == "stop the music " or myText == "hit pause ":
+            answer = "Gucci, pausing multimedia"
+            tts(answer, "play", False, "")
 
-    elif myText == "go to the previous song " or myText == "put the last song " \
-            or myText == "previous song ":
-        answer = "Okay, going back to the previous song"
-        tts(answer, "previous", False, "")
+        case myText if myText == "go to the next song " or myText == "pasa a otra canción " or myText == "next song ":
+            answer = "Okay, going to the next song in the list"
+            tts(answer, "next", False, "")
 
-    elif myText == "present yourself " or myText == "who are you ":
-        answer = "Ok, here I go. Hello, my name is ADY, short for \"Advanced Development auxiliarY\". I'm a " \
+        case myText if myText == "go to the previous song " or myText == "put the last song " \
+                       or myText == "previous song ":
+            answer = "Okay, going back to the previous song"
+            tts(answer, "previous", False, "")
+
+        case myText if myText == "present yourself " or myText == "who are you ":
+            answer = "Ok, here I go. Hello, my name is ADY, short for \"Advanced Development auxiliarY\". I'm a " \
                  "voice assistant created by Carlos Maristegui, or End, as you prefer to call him. I'm still " \
                  "under development, but I think I'm already capable of doing interesting things. For example, " \
                  "I can open the program you want, I can play or pause your music, I can also go to the previous " \
@@ -120,55 +122,55 @@ def playback(audio, activationing):
                  "Lastly, I can power on, restart, send to sleep mode, or lock your computer, so you don't have to " \
                  "spend energy hitting the button. Anyways, I'm ADY, and I'm your new personal assistant. Nice to " \
                  "meet you!"
-        tts(answer, "presentation", False, "")
+            tts(answer, "presentation", False, "")
 
-    elif myText == "power off the PC " or myText == "power off the computer " \
-            or myText == "power off the system " or myText == "power off the session":
-        answer = "Okay, powering off the PC. See you when you turn it on again!"
-        tts(answer, "", False, "")
+        case myText if myText == "power off the PC " or myText == "power off the computer " \
+                       or myText == "power off the system " or myText == "power off the session":
+            answer = "Okay, powering off the PC. See you when you turn it on again!"
+            tts(answer, "", False, "")
 
-    elif myText == "restart the PC " or myText == "restart the computer " \
-            or myText == "restart the system " or myText == "restart the session":
-        answer = "Right I'm gonna restart your PC. Wait till I do it, it'll be just a moment."
-        tts(answer, "reboot", False, "")
+        case myText if myText == "restart the PC " or myText == "restart the computer " \
+                       or myText == "restart the system " or myText == "restart the session":
+            answer = "Right I'm gonna restart your PC. Wait till I do it, it'll be just a moment."
+            tts(answer, "reboot", False, "")
 
-    elif myText == "lock the PC " or myText == "lock the computer " \
-            or myText == "lock the system " or myText == "lock the session":
-        answer = "Locking the PC's session..."
-        tts(answer, "lock", False, "")
+        case myText if myText == "lock the PC " or myText == "lock the computer " \
+                       or myText == "lock the system " or myText == "lock the session":
+            answer = "Locking the PC's session..."
+            tts(answer, "lock", False, "")
 
-    elif myText == "put the PC to sleep " or myText == "put the computer to sleep " \
-            or myText == "put the system to sleep " or myText == "put the session to sleep":
-        answer = "Okay, putting the system in sleep mode."
-        tts(answer, "suspend", False, "")
+        case myText if myText == "put the PC to sleep " or myText == "put the computer to sleep " \
+                       or myText == "put the system to sleep " or myText == "put the session to sleep":
+            answer = "Okay, putting the system in sleep mode."
+            tts(answer, "suspend", False, "")
 
-    elif "search in google " in myText or "search in Google " in myText:
-        answer = "Vale, espera que lo busco y te lo enseño"
-        tts(answer, "search", False, myText[17:-1])
+        case myText if "search in google " in myText or "search in Google " in myText:
+            answer = "Vale, espera que lo busco y te lo enseño"
+            tts(answer, "search", False, myText[17:-1])
 
-    elif myText == "tell me the time " or myText == "what time is it ":
-        date = datetime.now()
-        answer = "Right now, it's " + date.time().strftime("%H:%M")
-        tts(answer, "", False, "")
+        case myText if myText == "tell me the time " or myText == "what time is it ":
+            date = datetime.now()
+            answer = "Right now, it's " + date.time().strftime("%H:%M")
+            tts(answer, "", False, "")
 
-    elif myText == "tell me the date " or myText == "what day is it today ":
-        locale.getlocale()
-        date = datetime.now()
-        answer = "Today is " + date.date().strftime("%A, %d of %B, %Y")
-        tts(answer, "", False, "")
+        case myText if myText == "tell me the date " or myText == "what day is it today ":
+            locale.getlocale()
+            date = datetime.now()
+            answer = "Today is " + date.date().strftime("%A, %d of %B, %Y")
+            tts(answer, "", False, "")
 
-    elif myText == "switch to Spanish " or myText == "cambia a inglés ":
-        respuesta = "Okay, switching main program's language to: Spanish"
-        tts(respuesta, "language", False, "")
+        case myText if myText == "switch to Spanish " or myText == "cambia a inglés ":
+            respuesta = "Okay, switching main program's language to: Spanish"
+            tts(respuesta, "language", False, "")
 
-    elif "open " in myText:
-        answer = "Okay, opening " + myText[5:-1]
-        tts(answer, myText[5:-1], True, "")
+        case myText if "open " in myText:
+            answer = "Okay, opening " + myText[5:-1]
+            tts(answer, myText[5:-1], True, "")
 
-    else:
-        if activationing and myText != " ":
-            answer = "what the fuck? what did you say?"
-            tts(answer, "error", False, myText)
+        case _:
+            if activationing and myText != " ":
+                answer = "what the fuck? what did you say?"
+                tts(answer, "error", False, myText)
 
 
 def tts(audio, name, isprogram, text):
@@ -187,55 +189,58 @@ def tts(audio, name, isprogram, text):
             app(name)
             keystroke("")
 
-        elif name == "error":
-            myError = gTTS(text=text, lang='en-US', slow=False)
-            myError.save("audio.mp3")
-            playsound("audio.mp3")
-            remove("audio.mp3")
-            keystroke("")
+        match name:
 
-        elif name == "bye":
-            keystroke("")
-            exit()
+            case "error":
+                myError = gTTS(text=text, lang='es-ES', slow=False)
+                myError.save("audio.mp3")
+                playsound("audio.mp3")
+                remove("audio.mp3")
+                keystroke("")
 
-        elif name == "play":
-            keystroke("play")
-            keystroke("")
+            case "bye":
+                keystroke("")
+                exit()
 
-        elif name == "previous":
-            keystroke("previous")
-            keystroke("")
+            case "play":
+                keystroke("play")
+                keystroke("")
 
-        elif name == "next":
-            keystroke("next")
-            keystroke("")
+            case "previous":
+                keystroke("previous")
+                keystroke("")
 
-        elif name == "shutdown":
-            keystroke("")
-            system("shutdown.exe -s -t 0")
+            case "next":
+                keystroke("next")
+                keystroke("")
 
-        elif name == "reboot":
-            keystroke("")
-            system("shutdown.exe -r -t 0")
+            case "shutdown":
+                keystroke("")
+                system("shutdown.exe -s -t 0")
 
-        elif name == "lock":
-            keystroke("")
-            system("rundll32.exe user32.dll,LockWorkStation")
+            case "reboot":
+                keystroke("")
+                system("shutdown.exe -r -t 0")
 
-        elif name == "suspend":
-            keystroke("")
-            system("powercfg -h off")
-            system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
+            case "lock":
+                keystroke("")
+                system("rundll32.exe user32.dll,LockWorkStation")
 
-        elif name == "language":
-            exit()
+            case "suspend":
+                keystroke("")
+                system("powercfg -h off")
+                system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
 
-        elif name == "search":
-            system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
-            keystroke("")
+            case "language":
+                system("python \".\\en-US\\A-D-Y.pyw\"")
+                start(0, activation)
 
-        else:
-            keystroke("")
+            case "search":
+                system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
+                keystroke("")
+
+            case _:
+                keystroke("")
 
     except Exception:
         pass
@@ -248,24 +253,26 @@ def app(program):
 
 # noinspection PyTypeChecker
 def keystroke(media):
-    if media == "play":
-        keyboard.press(Key.media_play_pause)
+    match media:
 
-    elif media == "previous":
-        keyboard.press(Key.media_previous)
+        case "play":
+            keyboard.press(Key.media_play_pause)
 
-    elif media == "next":
-        keyboard.press(Key.media_next)
+        case "previous":
+            keyboard.press(Key.media_previous)
 
-    else:
-        keyboard.press(Key.ctrl)
-        keyboard.press(Key.alt)
-        keyboard.press(Key.shift)
-        keyboard.press("u")
-        keyboard.release(Key.ctrl)
-        keyboard.release(Key.alt)
-        keyboard.release(Key.shift)
-        keyboard.release("u")
+        case "next":
+            keyboard.press(Key.media_next)
+
+        case _:
+            keyboard.press(Key.ctrl)
+            keyboard.press(Key.alt)
+            keyboard.press(Key.shift)
+            keyboard.press("u")
+            keyboard.release(Key.ctrl)
+            keyboard.release(Key.alt)
+            keyboard.release(Key.shift)
+            keyboard.release("u")
 
 
 def background(origen):
