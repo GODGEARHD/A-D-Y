@@ -179,7 +179,7 @@ def tts(audio, name, isprogram, text, running):
     try:
         if name == "presentation":
             print(audio)
-            playsound("presentation.mp3")
+            playsound(".\\enUS\\presentation.mp3")
         else:
             myAudio = gTTS(text=audio, lang='en-US', slow=False)
             myAudio.save("audio.mp3")
