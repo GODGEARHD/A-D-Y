@@ -19,7 +19,7 @@ def close(icon):
 
 def tray(lang):
     icon = None
-    image = Image.open("..\\LOGO-ADY.png")
+    image = Image.open(".\\LOGO-ADY.png")
     if lang == "spanish":
         menu = (item('Change to: English', action, visible=False), item('Salir', lambda: close(icon), visible=True))
         icon = pystray.Icon("name", image, "A-D-Y en ejecución...", menu)
@@ -50,7 +50,7 @@ def second():
                     returned = tray("english")
                     print(returned)
 
-        while True:
+        """(while True:
             match returned:
                 case "spanish":
                     returned = tray("spanish")
@@ -59,7 +59,7 @@ def second():
                     returned = tray("english")
 
                 case _:
-                    return "exit"
+                    return "exit")"""
 
 
 def main():
@@ -94,7 +94,7 @@ t2.daemon = True
 t2.start()
 while True:
     if t1.is_alive() and t2.is_alive():
-        time.sleep(0.1)
+        # time.sleep(0.1)
         continue
     else:
         exit()

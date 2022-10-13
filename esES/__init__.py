@@ -168,7 +168,7 @@ def playback(audio, activationing, executioning):
             respuesta = "Vale, cambiando el idioma del programa principal a: Inglés"
             return tts(respuesta, "language", False, "", executioning)
 
-        case myText if "abre " in myText:
+        case myText if "abre " in myText or "ábreme " in myText:
             respuesta = "okay, abriendo " + myText[5:-1]
             tts(respuesta, myText[5:-1], True, "", executioning)
 
