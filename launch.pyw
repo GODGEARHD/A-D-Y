@@ -94,7 +94,7 @@ t2.daemon = True
 t2.start()
 while True:
     if t1.is_alive() and t2.is_alive():
-        # time.sleep(0.1)
+        time.sleep(0.1)
         continue
     else:
         exit()
