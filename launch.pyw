@@ -50,7 +50,7 @@ def second():
                     returned = tray("english")
                     print(returned)
 
-        """(while True:
+        while True:
             match returned:
                 case "spanish":
                     returned = tray("spanish")
@@ -59,7 +59,7 @@ def second():
                     returned = tray("english")
 
                 case _:
-                    return "exit")"""
+                    return "exit"
 
 
 def main():

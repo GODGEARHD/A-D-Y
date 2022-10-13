@@ -1,0 +1,7 @@
+pystray
+wmi
+SpeechRecognition
+gTTS
+playsound==1.2.2
+pynput
+Pillow

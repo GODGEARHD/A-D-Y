@@ -25,7 +25,7 @@ r = sr.Recognizer()
 Keyboard = Controller()
 numError = 0
 activation = False
-keywords = ["habla", "háblame", "ADI"]
+keywords = ["habla", "háblame", "ADI", "hey"]
 
 
 def start(phase, active, run):
@@ -164,7 +164,8 @@ def playback(audio, activationing, executioning):
             respuesta = "Hoy es " + date.date().strftime("%A, %d de %B de %Y")
             tts(respuesta, "", False, "", executioning)
 
-        case myText if myText == "cambia inglés " or myText == "cambia a inglés ":
+        case myText if myText == "cambia inglés " or myText == "cambia a inglés " or myText == "change to English " \
+                       or myText == "switch to English ":
             respuesta = "Vale, cambiando el idioma del programa principal a: Inglés"
             return tts(respuesta, "language", False, "", executioning)
 
