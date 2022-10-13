@@ -7,6 +7,7 @@ import threading
 from pystray import MenuItem as item
 import pystray
 from PIL import Image
+from os import name
 
 
 def action():
@@ -31,12 +32,14 @@ def tray(lang):
 
 
 running = False
+system = name
 
-sao = wmi.WMI()
-for process in sao.Win32_Process():
-    if "SAO Utils.exe" == process.Name:
-        running = True
-        break
+if system == "nt":
+    sao = wmi.WMI()
+    for process in sao.Win32_Process():
+        if "SAO Utils.exe" == process.Name:
+            running = True
+            break
 
 
 def second():
