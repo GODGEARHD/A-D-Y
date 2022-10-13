@@ -2,12 +2,13 @@ import time
 from sys import exit
 import esES
 import enUS
-import wmi
 import threading
 from pystray import MenuItem as item
 import pystray
 from PIL import Image
 from os import name
+if name == "nt":
+    import wmi
 
 
 def action():
@@ -20,7 +21,10 @@ def close(icon):
 
 def tray(lang):
     icon = None
-    image = Image.open(".\\LOGO-ADY.png")
+    if name == "nt":
+        image = Image.open(".\\LOGO-ADY.png")
+    else:
+        image = Image.open("./LOGO-ADY.png")
     if lang == "spanish":
         menu = (item('Change to: English', action, visible=False), item('Salir', lambda: close(icon), visible=True))
         icon = pystray.Icon("name", image, "A-D-Y en ejecución...", menu)
@@ -32,9 +36,8 @@ def tray(lang):
 
 
 running = False
-system = name
 
-if system == "nt":
+if name == "nt":
     sao = wmi.WMI()
     for process in sao.Win32_Process():
         if "SAO Utils.exe" == process.Name:
@@ -43,7 +46,11 @@ if system == "nt":
 
 
 def second():
-    with open(".\\config.ini", "r") as file:
+    if name == "nt":
+        config = ".\\config.ini"
+    else:
+        config = "./config.ini"
+    with open(config, "r") as file:
         for line in file:
             match line:
                 case line if line[11:-1] == "'es-ES'":
@@ -66,7 +73,11 @@ def second():
 
 
 def main():
-    with open(".\\config.ini", "r") as file:
+    if name == "nt":
+        config = ".\\config.ini"
+    else:
+        config = "./config.ini"
+    with open(config, "r") as file:
         for line in file:
             match line:
                 case line if line[11:-1] == "'es-ES'":

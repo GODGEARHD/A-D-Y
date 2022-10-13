@@ -12,7 +12,7 @@ import locale
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
-from os import popen, remove, system
+from os import popen, remove, system, name as ostype
 from pynput.keyboard import Key, Controller
 from sys import exit
 from random import randint
@@ -49,13 +49,19 @@ def start(phase, active, run):
 def main(activated, execution):
     with sr.Microphone() as origin:
         print("Say something...")
-        playsound(".\\enUS\\start-listen.wav")
+        if ostype == "nt":
+            playsound(".\\enUS\\start-listen.wav")
+        else:
+            playsound("./enUS/start-listen.wav")
         try:
             sleep(0.1)
             audio = r.listen(origin, timeout=5, phrase_time_limit=5)
             return playback(audio, activated, execution)
         except Exception:
-            playsound(".\\enUS\\stop-listen.wav")
+            if ostype == "nt":
+                playsound(".\\enUS\\stop-listen.wav")
+            else:
+                playsound("./enUS/stop-listen.wav")
             if execution:
                 keystroke("", execution)
             pass
@@ -69,7 +75,10 @@ def playback(audio, activationing, executioning):
         pass
     myText = myText + " "
     print(myText)
-    playsound(".\\enUS\\stop-listen.wav")
+    if ostype == "nt":
+        playsound(".\\enUS\\stop-listen.wav")
+    else:
+        playsound("./enUS/stop-listen.wav")
 
     match myText:
 
@@ -179,7 +188,11 @@ def tts(audio, name, isprogram, text, running):
     try:
         if name == "presentation":
             print(audio)
-            playsound(".\\enUS\\presentation.mp3")
+            if ostype == "nt":
+                sound = ".\\enUS\\presentation.mp3"
+            else:
+                sound = "./enUS/presentation.mp3"
+            playsound(sound)
         else:
             myAudio = gTTS(text=audio, lang='en-US', slow=False)
             myAudio.save("audio.mp3")
@@ -261,8 +274,11 @@ def tts(audio, name, isprogram, text, running):
 
 
 def app(program):
-    path = "\"..\\Links\\" + program + ".lnk\""
-    popen(path)
+    if ostype == "nt":
+        path = "\"..\\Links\\" + program + ".lnk\""
+        popen(path)
+    else:
+        pass
 
 
 # noinspection PyTypeChecker
