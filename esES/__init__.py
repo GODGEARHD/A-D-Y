@@ -19,9 +19,10 @@ from sys import exit
 from random import randint
 from time import sleep
 from datetime import datetime
+# import keyboard
 
 r = sr.Recognizer()
-keyboard = Controller()
+Keyboard = Controller()
 numError = 0
 activation = False
 keywords = ["habla", "háblame", "ADI"]
@@ -37,7 +38,7 @@ def start(phase, active, run):
     elif phase == 1:
         if run:
             keystroke("", run)
-        sleep(2.33)
+            sleep(2.33)
         respuesta = "¿Sí?"
     myAudio = gTTS(text=respuesta, lang='es-ES', slow=False)
     myAudio.save("audio.mp3")
@@ -191,8 +192,6 @@ def tts(audio, name, isprogram, text, running):
 
         if isprogram:
             app(name)
-            if running:
-                keystroke("", running)
 
         match name:
 
@@ -275,24 +274,34 @@ def keystroke(media, running):
     match media:
 
         case "play":
-            keyboard.press(Key.media_play_pause)
+            Keyboard.press(Key.media_play_pause)
 
         case "previous":
-            keyboard.press(Key.media_previous)
+            Keyboard.press(Key.media_previous)
 
         case "next":
-            keyboard.press(Key.media_next)
+            Keyboard.press(Key.media_next)
+
+        case "shortcut":
+            Keyboard.press(Key.ctrl)
+            Keyboard.press(Key.alt)
+            Keyboard.press(Key.shift)
+            Keyboard.press("a")
+            Keyboard.release(Key.ctrl)
+            Keyboard.release(Key.alt)
+            Keyboard.release(Key.shift)
+            Keyboard.release("a")
 
         case _:
             if running:
-                keyboard.press(Key.ctrl)
-                keyboard.press(Key.alt)
-                keyboard.press(Key.shift)
-                keyboard.press("u")
-                keyboard.release(Key.ctrl)
-                keyboard.release(Key.alt)
-                keyboard.release(Key.shift)
-                keyboard.release("u")
+                Keyboard.press(Key.ctrl)
+                Keyboard.press(Key.alt)
+                Keyboard.press(Key.shift)
+                Keyboard.press("u")
+                Keyboard.release(Key.ctrl)
+                Keyboard.release(Key.alt)
+                Keyboard.release(Key.shift)
+                Keyboard.release("u")
 
 
 def background(origen, run):
@@ -304,6 +313,7 @@ def background(origen, run):
         for i in keywords:
             if i in myText:
                 start(1, True, run)
+                # keystroke("shortcut", run)
                 break
             else:
                 pass
@@ -312,12 +322,12 @@ def background(origen, run):
 
 
 def __init__(run):
-    toggle = True
-    returned = start(0, toggle, run)
+    returned = start(0, True, run)
     if returned == "english":
         return returned
     else:
         sr.Recognizer()
         with sr.Microphone() as fuente:
             while True:
+                # keyboard.add_hotkey('ctrl + alt + shift + a', lambda: start(1, True, run, True))
                 background(fuente, run)

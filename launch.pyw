@@ -1,3 +1,4 @@
+import time
 from sys import exit
 import esES
 import enUS
@@ -17,13 +18,14 @@ def close(icon):
 
 
 def tray(lang):
-    menu = None
+    icon = None
     image = Image.open("..\\LOGO-ADY.png")
     if lang == "spanish":
-        menu = (item('A-D-Y en ejecución...', action, visible=False), item('Salir', lambda: close(icon), visible=False))
+        menu = (item('Change to: English', action, visible=False), item('Salir', lambda: close(icon), visible=True))
+        icon = pystray.Icon("name", image, "A-D-Y en ejecución...", menu)
     elif lang == "english":
-        menu = (item('A-D-Y running...', action, visible=False), item('Exit', lambda: close(icon), visible=False))
-    icon = pystray.Icon("name", image, "A-D-Y", menu)
+        menu = (item('Cambiar a: Español', action, visible=False), item('Exit', lambda: close(icon), visible=True))
+        icon = pystray.Icon("name", image, "A-D-Y running...", menu)
     icon.run()
     return "exit"
 
@@ -81,10 +83,18 @@ def main():
                     returned = enUS.__init__(running)
 
                 case _:
-                    exit()
+                    return "exit"
 
 
 t1 = threading.Thread(target=second)
 t1.daemon = True
 t1.start()
-main()
+t2 = threading.Thread(target=main)
+t2.daemon = True
+t2.start()
+while True:
+    if t1.is_alive() and t2.is_alive():
+        time.sleep(0.1)
+        continue
+    else:
+        exit()

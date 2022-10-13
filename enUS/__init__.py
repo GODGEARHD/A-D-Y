@@ -36,7 +36,7 @@ def start(phase, active, run):
     elif phase == 1:
         if run:
             keystroke("", run)
-        sleep(2.33)
+            sleep(2.33)
         answer = "Yes?"
     myAudio = gTTS(text=answer, lang='en-US', slow=False)
     myAudio.save("audio.mp3")
@@ -47,7 +47,6 @@ def start(phase, active, run):
 
 
 def main(activated, execution):
-
     with sr.Microphone() as origin:
         print("Say something...")
         playsound(".\\enUS\\start-listen.wav")
@@ -189,8 +188,6 @@ def tts(audio, name, isprogram, text, running):
 
         if isprogram:
             app(name)
-            if running:
-                keystroke("", running)
 
         match name:
 
@@ -309,8 +306,7 @@ def background(origen, run):
 
 
 def __init__(run):
-    toggle = True
-    returned = start(0, toggle, run)
+    returned = start(0, True, run)
     if returned == "spanish":
         return returned
     else:
