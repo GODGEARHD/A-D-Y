@@ -76,6 +76,8 @@ def playback(audio, activationing, executioning):
     try:
         myText = r.recognize_google(audio, language='es-ES')
     except Exception:
+        if executioning:
+            keystroke("", executioning)
         pass
     myText = myText + " "
     print(myText)
