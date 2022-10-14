@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import time
 from sys import exit
 import esES
