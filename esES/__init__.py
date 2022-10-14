@@ -241,12 +241,18 @@ def tts(audio, name, isprogram, text, running):
             case "shutdown":
                 if running:
                     keystroke("", running)
-                system("shutdown.exe -s -t 0")
+                if name == "nt":
+                    system("shutdown.exe -s -t 0")
+                else:
+                    system("poweroff")
 
             case "reboot":
                 if running:
                     keystroke("", running)
-                system("shutdown.exe -r -t 0")
+                if name == "nt":
+                    system("shutdown.exe -r -t 0")
+                else:
+                    system("reboot")
 
             case "lock":
                 if running:

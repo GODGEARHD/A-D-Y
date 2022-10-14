@@ -236,23 +236,35 @@ def tts(audio, name, isprogram, text, running):
             case "shutdown":
                 if running:
                     keystroke("", running)
-                system("shutdown.exe -s -t 0")
+                if name == "nt":
+                    system("shutdown.exe -s -t 0")
+                else:
+                    system("poweroff")
 
             case "reboot":
                 if running:
                     keystroke("", running)
-                system("shutdown.exe -r -t 0")
+                if name == "nt":
+                    system("shutdown.exe -r -t 0")
+                else:
+                    system("reboot")
 
             case "lock":
                 if running:
                     keystroke("", running)
-                system("rundll32.exe user32.dll,LockWorkStation")
+                if name == "nt":
+                    system("rundll32.exe user32.dll,LockWorkStation")
+                else:
+                    pass
 
             case "suspend":
                 if running:
                     keystroke("", running)
-                system("powercfg -h off")
-                system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
+                if name == "nt":
+                    system("powercfg -h off")
+                    system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
+                else:
+                    pass
 
             case "language":
                 f = open("config.ini", "w+")
