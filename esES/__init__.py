@@ -10,6 +10,7 @@ atajo.
 """
 
 import locale
+import threading
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
@@ -20,6 +21,14 @@ from random import randint
 from time import sleep
 from datetime import datetime
 # import keyboard
+from pystray import MenuItem as item
+import pystray
+from PIL import Image
+
+returned = None
+sao = False
+exiting = False
+icon = None
 
 r = sr.Recognizer()
 Keyboard = Controller()
@@ -271,6 +280,8 @@ def tts(audio, name, isprogram, text, running):
                 f = open("config.ini", "w")
                 f.write("language = 'en-US' ")
                 f.close()
+                # noinspection PyTypeChecker
+                close(icon)
                 return "english"
 
             case "search":
@@ -331,6 +342,7 @@ def keystroke(media, running):
 
 
 def background(origen, run):
+    global exiting
     try:
         audio = r.listen(origen, timeout=7, phrase_time_limit=3)
         myText = r.recognize_google(audio, language='es-ES', show_all=False)
@@ -338,22 +350,84 @@ def background(origen, run):
         print(myText)
         for i in keywords:
             if i in myText:
-                start(1, True, run)
+                return start(1, True, run)
                 # keystroke("shortcut", run)
-                break
             else:
                 pass
     except Exception:
         print("Esperando a escuchar la palabra clave...")
 
 
-def __init__(run):
-    returned = start(0, True, run)
+def change(icono=icon):
+    global returned
+    global exiting
+    returned = "english"
+    exiting = True
+    icono.stop()
+
+
+def close(icono=icon):
+    icono.stop()
+
+
+def tray():
+    global returned
+    global icon
+    if ostype == "nt":
+        image = Image.open(".\\LOGO-ADY.png")
+    else:
+        image = Image.open("./LOGO-ADY.png")
+    menu = (item('Change to: English', lambda: change(icon), visible=True),
+            item('Salir', lambda: close(icon), visible=True))
+    icon = pystray.Icon("name", image, "A-D-Y en ejecución...", menu)
+    icon.run()
+    exit()
+
+
+def initial(run):
+    global returned
+    global sao
+    sao = run
+    t1 = threading.Thread(target=tray)
+    t1.daemon = True
+    t1.start()
+    t2 = threading.Thread(target=__init__)
+    t2.daemon = True
+    t2.start()
+    while True:
+        if t1.is_alive() and t2.is_alive():
+            sleep(0.1)
+            continue
+        else:
+            return returned
+
+
+def __init__():
+    global sao
+    global returned
+    global exiting
+    returned = start(0, True, sao)
     if returned == "english":
         return returned
+    elif exiting:
+        exiting = False
+        return "exit"
     else:
-        sr.Recognizer()
-        with sr.Microphone() as fuente:
-            while True:
-                # keyboard.add_hotkey('ctrl + alt + shift + a', lambda: start(1, True, run, True))
-                background(fuente, run)
+        if returned == "english":
+            return returned
+        elif exiting:
+            exiting = False
+            return "exit"
+        else:
+            sr.Recognizer()
+            with sr.Microphone() as fuente:
+                while True:
+                    # keyboard.add_hotkey('ctrl + alt + shift + a', lambda: start(1, True, run, True))
+                    returned = background(fuente, sao)
+                    if returned == "english":
+                        return returned
+                    elif exiting:
+                        exiting = False
+                        return "exit"
+                    else:
+                        continue
