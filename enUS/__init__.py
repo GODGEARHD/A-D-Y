@@ -25,6 +25,7 @@ import pystray
 from PIL import Image
 from win32api import GetKeyState
 from win32con import VK_CAPITAL
+import json
 
 returned = None
 sao = False
@@ -32,14 +33,16 @@ exiting = False
 icon = None
 llamada = False
 mayus = GetKeyState(VK_CAPITAL)
-mayus_option = True
+notification_sent = False
+mayus_notifier = None
+mayus_audio = None
 
 r = sr.Recognizer()
 Keyboard = Controller()
 keywords = ["speak", "ADI", "Adi", "hey", "80"]
 
 
-def capscheck():
+def caps_check():
     global mayus
     while True:
         sleep(0.01)
@@ -50,28 +53,71 @@ def capscheck():
             mayus = True
 
 
-def caps_option():
-    global mayus_option
-    if mayus_option:
-        mayus_option = False
-    elif not mayus_option:
-        mayus_option = True
+def caps_config(param):
+    global mayus_notifier
+    global mayus_audio
+    if param == "notifier":
+        if mayus_notifier:
+            mayus_notifier = False
+            f = open("config.ini", "w")
+            f.write(f"language = 'en-US'\n"
+                    f"mayus_notifier = {str(mayus_notifier)}\n"
+                    f"mayus_audio = {str(mayus_audio)}\n--EOF--")
+            f.close()
+        elif not mayus_notifier:
+            mayus_notifier = True
+            f = open("config.ini", "w")
+            f.write(f"language = 'en-US'\n"
+                    f"mayus_notifier = {str(mayus_notifier)}\n"
+                    f"mayus_audio = {str(mayus_audio)}\n--EOF--")
+            f.close()
+    elif param == "audio":
+        if mayus_audio:
+            mayus_audio = False
+            f = open("config.ini", "w")
+            f.write(f"language = 'en-US'\n"
+                    f"mayus_notifier = {str(mayus_notifier)}\n"
+                    f"mayus_audio = {str(mayus_audio)}\n--EOF--")
+            f.close()
+        elif not mayus_audio:
+            mayus_audio = True
+            f = open("config.ini", "w")
+            f.write(f"language = 'en-US'\n"
+                    f"mayus_notifier = {str(mayus_notifier)}\n"
+                    f"mayus_audio = {str(mayus_audio)}\n--EOF--")
+            f.close()
 
 
-def caps():
+def caps_notifications(icono=icon):
     global mayus
-    global mayus_option
-    if mayus_option:
+    global mayus_notifier
+    global mayus_audio
+    global icon
+    global notification_sent
+    if mayus_notifier:
         if mayus:
             mayus = False
-            print("caps off")
-            playsound(".\\enUS\\noCaps.mp3")
+            print("mayúsculas desactivadas")
+            if notification_sent:
+                icono.remove_notification()
+            icono.notify("Caps OFF", "A-D-Y")
+            notification_sent = True
         elif not mayus:
             mayus = True
-            print("caps on")
-            playsound(".\\enUS\\caps.mp3")
-    else:
-        pass
+            print("mayúsculas activadas")
+            if notification_sent:
+                icono.remove_notification()
+            icono.notify("Caps ON", "A-D-Y")
+            notification_sent = True
+    if mayus_audio:
+        if mayus:
+            mayus = False
+            print("mayúsculas desactivadas")
+            playsound(".\\esES\\noCaps.mp3")
+        elif not mayus:
+            mayus = True
+            print("mayúsculas activadas")
+            playsound(".\\esES\\caps.mp3")
 
 
 def start(phase, active, run):
@@ -102,9 +148,7 @@ def main(active, run):
         else:
             playsound("./enUS/start-listen.wav")
         try:
-            sleep(0.1)
-            # audio = r.listen(origin, timeout=5, phrase_time_limit=5)
-            audio = r.listen(origin, timeout=5)
+            audio = r.listen(origin, timeout=5, phrase_time_limit=3)
             return playback(audio, active, run)
         except Exception:
             if ostype == "nt":
@@ -236,6 +280,8 @@ def playback(audio, active, run):
 
 
 def tts(audio, name, isprogram, text, run):
+    global mayus_notifier
+    global mayus_audio
     try:
         if name == "presentation":
             print(audio)
@@ -319,9 +365,10 @@ def tts(audio, name, isprogram, text, run):
 
             case "language":
                 f = open("config.ini", "w+")
-                f.write("language = 'es-ES' ")
+                f.write(f"language = 'es-ES'\n"
+                        f"mayus_notifier = {str(mayus_notifier)}\n"
+                        f"mayus_audio = {str(mayus_audio)}\n--EOF--")
                 f.close()
-                global icon
                 # noinspection PyTypeChecker
                 close(icon)
                 return "spanish"
@@ -379,7 +426,7 @@ def background(origen, run):
         myText = r.recognize_google(audio, language='en-US', show_all=False)
         myText = myText.split(' ')
         if "80" in myText:
-            print("ADY")
+            print(['ADY'])
         else:
             print(myText)
         for i in keywords:
@@ -407,14 +454,16 @@ def close(icono=icon):
 def tray():
     global returned
     global icon
+    keyboard.add_hotkey('capslock', lambda: caps_notifications(icon))
     if ostype == "nt":
         image = Image.open(".\\LOGO-ADY.png")
     else:
         image = Image.open("./LOGO-ADY.png")
     menu = (item('Cambiar a: Español', lambda: change(icon), visible=True),
-            item('Turn On/Off dictated caps', lambda: caps_option(), visible=True),
+            item('Turn On/Off caps notifier', lambda: caps_config("notifier"), visible=True),
+            item('Turn On/Off dictated caps', lambda: caps_config("audio"), visible=True),
             item('Exit', lambda: close(icon), visible=True))
-    icon = pystray.Icon("name", image, "A-D-Y running...", menu)
+    icon = pystray.Icon("Ady", image, "A-D-Y running...", menu)
     icon.run()
     exit()
 
@@ -422,15 +471,26 @@ def tray():
 def initial(run):
     global returned
     global sao
+    global mayus_notifier
+    global mayus_audio
+    if ostype == "nt":
+        config = ".\\config.ini"
+    else:
+        config = "./config.ini"
+    with open(config, "r") as file:
+        line = file.readlines()
+        line1 = line[1]
+        line2 = line[2]
+        mayus_notifier = json.loads(line1[17:-1].lower())
+        mayus_audio = json.loads(line2[14:-1].lower())
     sao = run
-    keyboard.add_hotkey('capslock', lambda: caps())
     t1 = threading.Thread(target=tray)
     t1.daemon = True
     t1.start()
     t2 = threading.Thread(target=__init__)
     t2.daemon = True
     t2.start()
-    t3 = threading.Thread(target=capscheck)
+    t3 = threading.Thread(target=caps_check)
     t3.daemon = True
     t3.start()
     while True:

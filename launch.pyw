@@ -22,15 +22,17 @@ def main():
     else:
         config = "./config.ini"
     with open(config, "r") as file:
-        for line in file:
-            match line:
-                case line if line[11:-1] == "'es-ES'":
-                    returned = esES.initial(running)
-                    print(returned)
+        line = file.readlines()
+        match line[0]:
+            case line if line[11:-1] == "'es-ES'":
+                returned = esES.initial(running)
+                print(returned)
 
-                case line if line[11:-1] == "'en-US'":
-                    returned = enUS.initial(running)
-                    print(returned)
+            case line if line[11:-1] == "'en-US'":
+                returned = enUS.initial(running)
+                print(returned)
+            case _:
+                print(line[11:-1])
 
         while True:
             match returned:
