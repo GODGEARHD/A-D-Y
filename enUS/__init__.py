@@ -27,7 +27,7 @@ from win32api import GetKeyState
 from win32con import VK_CAPITAL
 import json
 
-returned = None
+returned2 = None
 sao = False
 exiting = False
 icon = None
@@ -97,27 +97,29 @@ def caps_notifications(icono=icon):
     if mayus_notifier:
         if mayus:
             mayus = False
-            print("mayúsculas desactivadas")
+            print("caps off")
             if notification_sent:
                 icono.remove_notification()
             icono.notify("Caps OFF", "A-D-Y")
             notification_sent = True
         elif not mayus:
             mayus = True
-            print("mayúsculas activadas")
+            print("caps on")
             if notification_sent:
                 icono.remove_notification()
             icono.notify("Caps ON", "A-D-Y")
             notification_sent = True
     if mayus_audio:
         if mayus:
-            mayus = False
-            print("mayúsculas desactivadas")
-            playsound(".\\esES\\noCaps.mp3")
+            if not mayus_notifier:
+                mayus = False
+                print("caps off")
+            playsound(".\\enUS\\caps.mp3")
         elif not mayus:
-            mayus = True
-            print("mayúsculas activadas")
-            playsound(".\\esES\\caps.mp3")
+            if not mayus_notifier:
+                mayus = True
+                print("caps on")
+            playsound(".\\enUS\\noCaps.mp3")
 
 
 def start(phase, active, run):
@@ -266,7 +268,9 @@ def playback(audio, active, run):
 
         case myText if myText == "switch to Spanish " or myText == "change to Spanish " or myText == "cambia español " \
                        or myText == "cambia a español ":
-            answer = "Okay, switching main program's language to: Spanish"
+            # answer = "Okay, switching main program's language to: Spanish"
+            answer = "I'm sorry, but I have this voice command function disabled because of a minor bug. If you want " \
+                     "to change language, please use the tray icon."
             return tts(answer, "language", False, "", run)
 
         case myText if "open " in myText:
@@ -282,6 +286,7 @@ def playback(audio, active, run):
 def tts(audio, name, isprogram, text, run):
     global mayus_notifier
     global mayus_audio
+    global exiting
     try:
         if name == "presentation":
             print(audio)
@@ -364,11 +369,17 @@ def tts(audio, name, isprogram, text, run):
                     system("systemctl suspend")
 
             case "language":
+                if run:
+                    keystroke("", run)
+
+            case "language2":
                 f = open("config.ini", "w+")
                 f.write(f"language = 'es-ES'\n"
                         f"mayus_notifier = {str(mayus_notifier)}\n"
                         f"mayus_audio = {str(mayus_audio)}\n--EOF--")
                 f.close()
+                exiting = True
+                global icon
                 # noinspection PyTypeChecker
                 close(icon)
                 return "spanish"
@@ -439,10 +450,15 @@ def background(origen, run):
 
 
 def change(icono=icon):
-    global returned
+    global returned2
     global exiting
-    returned = "spanish"
+    returned2 = "spanish"
     exiting = True
+    f = open("config.ini", "w+")
+    f.write(f"language = 'es-ES'\n"
+            f"mayus_notifier = {str(mayus_notifier)}\n"
+            f"mayus_audio = {str(mayus_audio)}\n--EOF--")
+    f.close()
     keystroke("", sao)
     icono.stop()
 
@@ -452,7 +468,7 @@ def close(icono=icon):
 
 
 def tray():
-    global returned
+    global returned2
     global icon
     keyboard.add_hotkey('capslock', lambda: caps_notifications(icon))
     if ostype == "nt":
@@ -469,7 +485,7 @@ def tray():
 
 
 def initial(run):
-    global returned
+    global returned2
     global sao
     global mayus_notifier
     global mayus_audio
@@ -501,37 +517,37 @@ def initial(run):
             global mayus
             mayus = GetKeyState(VK_CAPITAL)
             keyboard.unhook_all_hotkeys()
-            return returned
+            return returned2
 
 
 def __init__():
     global sao
-    global returned
+    global returned2
     global exiting
-    returned = start(0, True, sao)
-    if returned == "spanish":
-        return returned
+    returned2 = start(0, True, sao)
+    if returned2 == "spanish":
+        return "spanish"
     elif exiting:
         exiting = False
         return "exit"
     else:
-        if returned == "spanish":
+        """if returned == "spanish":
             return returned
         elif exiting:
             exiting = False
             return "exit"
-        else:
-            sr.Recognizer()
-            with sr.Microphone() as fuente:
-                while True:
-                    if llamada:
-                        continue
+        else:"""
+        sr.Recognizer()
+        with sr.Microphone() as fuente:
+            while True:
+                if llamada:
+                    continue
+                else:
+                    returned2 = background(fuente, sao)
+                    if returned2 == "spanish":
+                        return returned2
+                    elif exiting:
+                        exiting = False
+                        return "exit"
                     else:
-                        returned = background(fuente, sao)
-                        if returned == "spanish":
-                            return returned
-                        elif exiting:
-                            exiting = False
-                            return "exit"
-                        else:
-                            continue
+                        continue
