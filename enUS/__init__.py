@@ -39,7 +39,7 @@ mayus_audio = None
 
 r = sr.Recognizer()
 Keyboard = Controller()
-keywords = ["speak", "ADI", "Adi", "hey", "80"]
+keywords = ["speak", "ADI", "Adi", "hey", "ADY"]
 
 
 def caps_check():
@@ -150,7 +150,7 @@ def main(active, run):
         else:
             playsound("./enUS/start-listen.wav")
         try:
-            audio = r.listen(origin, timeout=5, phrase_time_limit=3)
+            audio = r.listen(origin, timeout=5)
             return playback(audio, active, run)
         except Exception:
             if ostype == "nt":
@@ -438,6 +438,7 @@ def background(origen, run):
         myText = myText.split(' ')
         if "80" in myText:
             print(['ADY'])
+            myText = "ADY"
         else:
             print(myText)
         for i in keywords:
@@ -479,7 +480,7 @@ def tray():
             item('Turn On/Off caps notifier', lambda: caps_config("notifier"), visible=True),
             item('Turn On/Off dictated caps', lambda: caps_config("audio"), visible=True),
             item('Exit', lambda: close(icon), visible=True))
-    icon = pystray.Icon("Ady", image, "A-D-Y running...", menu)
+    icon = pystray.Icon("Ady", image, "A-D-Y", menu)
     icon.run()
     exit()
 

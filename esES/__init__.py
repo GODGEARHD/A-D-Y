@@ -101,14 +101,14 @@ def caps_notifications(icono=icon):
             print("mayúsculas desactivadas")
             if notification_sent:
                 icono.remove_notification()
-            icono.notify("Caps OFF", "A-D-Y")
+            icono.notify("Mayús Desactivadas", "A-D-Y")
             notification_sent = True
         elif not mayus:
             mayus = True
             print("mayúsculas activadas")
             if notification_sent:
                 icono.remove_notification()
-            icono.notify("Caps ON", "A-D-Y")
+            icono.notify("Mayús Activadas", "A-D-Y")
             notification_sent = True
     if mayus_audio:
         if mayus:
@@ -151,7 +151,7 @@ def main(active, run):
         else:
             playsound("./esES/start-listen.wav")
         try:
-            audio = r.listen(source, timeout=5, phrase_time_limit=3)
+            audio = r.listen(source, timeout=5)
             return playback(audio, active, run)
         except Exception:
             if ostype == "nt":
@@ -506,7 +506,7 @@ def tray():
             item('Activar/Desactivar notificador de Mayus', lambda: caps_config("notifier"), visible=True),
             item('Activar/Desactivar dictado de Mayus', lambda: caps_config("audio"), visible=True),
             item('Salir', lambda: close(icon), visible=True))
-    icon = pystray.Icon("Ady", image, "A-D-Y en ejecución...", menu)
+    icon = pystray.Icon("Ady", image, "A-D-Y", menu)
     icon.run()
     exit()
 
