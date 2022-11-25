@@ -217,12 +217,8 @@ def playback(audio, active, run):
     print(myText)
     if ostype == "nt":
         playsound(".\\audio\\stopListen.wav")
-        sleep(0.2)
-        playsound(".\\audio\\windowHide.wav")
     else:
         playsound("./audio/stopListen.wav")
-        sleep(0.2)
-        playsound("./audio/windowHide.wav")
 
     match myText:
 
