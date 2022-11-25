@@ -54,7 +54,7 @@ mayus_audio = None
 
 r = sr.Recognizer()
 Keyboard = Controller()
-keywords = ["habla", "háblame", "ADI", "oye ADI"]
+keywords = ["háblame", "ADI", "oye ADI"]
 
 
 def locks_check():
