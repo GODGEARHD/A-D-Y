@@ -5,6 +5,8 @@ import enUS
 from os import name
 if name == "nt":
     import wmi
+    import osd
+from sys import exit
 
 running = False
 
@@ -25,11 +27,11 @@ def main():
         line = file.readlines()
         match line[0]:
             case line if line[11:-1] == "'es-ES'":
-                returned = esES.initial(running)
+                returned = esES.initial(True)
                 print(returned)
 
             case line if line[11:-1] == "'en-US'":
-                returned = enUS.initial(running)
+                returned = enUS.initial(True)
                 print(returned)
             case _:
                 print(line[11:-1])
@@ -37,22 +39,16 @@ def main():
         while True:
             match returned:
                 case "spanish":
-                    returned = esES.initial(running)
+                    returned = esES.initial(True)
 
                 case "english":
-                    returned = enUS.initial(running)
+                    returned = enUS.initial(True)
 
                 case _:
+                    if name == "nt":
+                        osd.end()
+                    exit()
                     return "exit"
 
 
-"""t2 = threading.Thread(target=main)
-t2.daemon = True
-t2.start()
-while True:
-    if t2.is_alive():
-        time.sleep(0.1)
-        continue
-    else:
-        exit()"""
 main()

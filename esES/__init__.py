@@ -7,6 +7,15 @@ como atajo de teclado para abrir/cerrar su interfaz.
 Aunque, si no quieres utilizar SAO Utils, este programa debería funcionar perfectamente y sin problemas. Pero
 ten cuidado, ya que si tienes asignado el atajo anteriormente mencionado, ADY lo usará y hará lo que sea que haga ese
 atajo.
+
+-------------------------------------------------------------------------------------------------------------------
+
+AÚN MÁS IMPORTANTE!!!!
+
+En este momento, con la última versión, he modificado parte del código (además de haber añadido nuevo código (mucho)),
+por lo que A-D-Y tiene su propia interfaz, y ahora *NO* utiliza SAO Utils para absolutamente nada.
+
+NOTA: La interfaz está todavía bastante verde, así que no esperes que sea demasiado sofisticada ;)
 """
 
 import locale
@@ -24,34 +33,51 @@ import keyboard
 from pystray import MenuItem as item
 import pystray
 from PIL import Image
-from win32api import GetKeyState
-from win32con import VK_CAPITAL
+if ostype == "nt":
+    from win32api import GetKeyState
+    from win32con import VK_CAPITAL, VK_SCROLL, VK_NUMLOCK
 import json
+import osd
+import AVMSpeechMath as sm
 
 returned2 = None
 sao = False
 exiting = False
 icon = None
-llamada = False
-mayus = GetKeyState(VK_CAPITAL)
+if ostype == "nt":
+    mayus = GetKeyState(VK_CAPITAL)
+    scroll = GetKeyState(VK_SCROLL)
+    num = GetKeyState(VK_NUMLOCK)
 notification_sent = False
 mayus_notifier = None
 mayus_audio = None
 
 r = sr.Recognizer()
 Keyboard = Controller()
-keywords = ["habla", "háblame", "ADI", "hey"]
+keywords = ["habla", "háblame", "ADI", "oye ADI"]
 
 
-def caps_check():
+def locks_check():
     global mayus
+    global scroll
+    global num
     while True:
         sleep(0.01)
         mayus = GetKeyState(VK_CAPITAL)
+        scroll = GetKeyState(VK_SCROLL)
+        num = GetKeyState(VK_NUMLOCK)
         if mayus == 0:
             mayus = False
         elif mayus == 1:
             mayus = True
+        if scroll == 0:
+            scroll = False
+        elif scroll == 1:
+            scroll = True
+        if num == 0:
+            num = False
+        elif num == 1:
+            num = True
 
 
 def caps_config(param):
@@ -129,11 +155,22 @@ def start(phase, active, run):
         "¡ADY lista para ayudar!"]
     respuesta = None
     if phase == 0:
+        keystroke("show", run)
+        if ostype == "nt":
+            playsound(".\\audio\\windowShow.wav")
+        else:
+            playsound("./audio/windowShow.wav")
+        # sleep(2.33)
         respuesta = respuestas[randint(0, 1)]
     elif phase == 1:
         if run:
-            keystroke("", run)
-            sleep(2.33)
+            keystroke("show", run)
+            # sleep(2.33)
+            if ostype == "nt":
+                playsound(".\\audio\\windowShow.wav")
+            else:
+                playsound("./audio/windowShow.wav")
+            # sleep(2.33)
         respuesta = "¿Sí?"
     myAudio = gTTS(text=respuesta, lang='es-ES', slow=False)
     myAudio.save("audio.mp3")
@@ -145,21 +182,26 @@ def start(phase, active, run):
 
 def main(active, run):
     with sr.Microphone() as source:
+        # r.adjust_for_ambient_noise(source=source, duration=0.5)
         print("Di algo...")
         if ostype == "nt":
-            playsound(".\\esES\\start-listen.wav")
+            playsound(".\\audio\\startListen.wav")
         else:
-            playsound("./esES/start-listen.wav")
+            playsound("./audio/startListen.wav")
         try:
-            audio = r.listen(source, timeout=5)
+            audio = r.listen(source, timeout=5, phrase_time_limit=3)
             return playback(audio, active, run)
         except Exception:
             if ostype == "nt":
-                playsound(".\\esES\\stop-listen.wav")
+                playsound(".\\audio\\stopListen.wav")
+                sleep(0.2)
+                playsound(".\\audio\\windowHide.wav")
             else:
-                playsound("./esES/stop-listen.wav")
+                playsound("./audio/stopListen.wav")
+                sleep(0.2)
+                playsound("./audio/windowHide.wav")
             if run:
-                keystroke("", run)
+                keystroke("hide", run)
             pass
 
 
@@ -169,53 +211,54 @@ def playback(audio, active, run):
         myText = r.recognize_google(audio, language='es-ES')
     except Exception:
         if run:
-            keystroke("", run)
+            keystroke("hide", run)
         pass
     myText = myText + " "
     print(myText)
     if ostype == "nt":
-        playsound(".\\esES\\stop-listen.wav")
+        playsound(".\\audio\\stopListen.wav")
     else:
-        playsound("./esES/stop-listen.wav")
+        playsound("./audio/stopListen.wav")
 
     match myText:
 
-        case "hola buenas ":
+        case myText if "hola buenas " in myText:
             respuesta = "alo prresidentess"
             tts(respuesta, "", False, "", run)
 
-        case myText if myText == "me cago en tu madre " or myText == "mecagoentuputamadre ":
+        case myText if "me cago en tu madre " in myText or "mecagoentuputamadre " in myText:
             respuesta = "Y yo en la tuya que se me abre hijueperra"
             tts(respuesta, "", False, "", run)
 
-        case "apágate ":
-            respuesta = "Vale, si necesitas algo de mí, toca el botón verde que tienes arriba a la izquierda en sao " \
-                        "utils. ¡Nos vemos!"
+        case myText if "apágate " in myText:
+            # respuesta = "Vale, si necesitas algo de mí, toca el botón verde que tienes arriba a la izquierda en " \
+            #            "sao utils. ¡Nos vemos!"
+            respuesta = "Vale. Si me necesitas de nuevo, simplemente vuelve a ejecutarme. ¡Nos vemos!"
             tts(respuesta, "bye", False, "", run)
 
         case myText if "calla " in myText or "cállate " in myText or "nada " in myText:
             respuesta = "Vale, si necesitas algo avísame"
             tts(respuesta, "", False, "", run)
 
-        case myText if myText == "pon la música " or myText == "dale al play " or myText == "pon música ":
+        case myText if "pon la música " in myText or "dale al play " in myText or "pon música " in myText:
             respuesta = "Vale, reproduciendo multimedia"
             tts(respuesta, "play", False, "", run)
 
-        case myText if myText == "para la música " or myText == "dale al pause ":
+        case myText if "para la música " in myText or "dale al pause " in myText:
             respuesta = "Gucci, pausando multimedia"
             tts(respuesta, "play", False, "", run)
 
-        case myText if myText == "pasa otra canción " or myText == "pasa a otra canción " \
-                       or myText == "siguiente canción ":
+        case myText if "pasa otra canción " in myText or "pasa a otra canción " in myText \
+                       or "siguiente canción " in myText:
             respuesta = "Vale, pasando a la siguiente canción en la lista de reproducción"
             tts(respuesta, "next", False, "", run)
 
-        case myText if myText == "vuelve una canción hacia atrás " or myText == "pon la última canción " \
-                       or myText == "canción anterior ":
+        case myText if "vuelve una canción hacia atrás " in myText or "pon la última canción " in myText \
+                       or "canción anterior " in myText:
             respuesta = "Okay, vuelvo a la canción anterior"
             tts(respuesta, "previous", False, "", run)
 
-        case myText if myText == "preséntate " or myText == "quién eres ":
+        case myText if "preséntate " in myText or "quién eres " in myText:
             respuesta = "Vale, allá voy. Hola, me llamo ADY, acortado de \"Advanced Development auxiliarY\". Soy una " \
                     "asistente de voz creada por Carlos Maristegui, o End, como prefieras llamarle. Aún estoy en " \
                     "desarrollo, pero creo que ya soy capaz de hacer cositas interesantes. Por ejemplo, puedo abrir " \
@@ -230,39 +273,75 @@ def playback(audio, active, run):
                     "asistente personal. ¡Encantada de conocerte!"
             tts(respuesta, "presentation", False, "", run)
 
-        case myText if myText == "apaga el PC " or myText == "apaga el ordenador " or myText == "apaga el equipo " \
-                       or myText == "apaga el sistema " or myText == "apaga la sesión":
+        case myText if "apaga el PC " in myText or "apaga el ordenador " in myText or "apaga el equipo " in myText \
+                       or "apaga el sistema " in myText or "apaga la sesión" in myText:
             respuesta = "Vale, voy a apagar tu ordenador. ¡Nos vemos cuando lo vuelvas a encender!"
             tts(respuesta, "shutdown", False, "", run)
 
-        case myText if myText == "reinicia el PC " or myText == "reinicia el ordenador " \
-                       or myText == "reinicia el equipo " or myText == "reinicia el sistema " \
-                       or myText == "reinicia la sesión":
+        case myText if "reinicia el PC " in myText or "reinicia el ordenador " in myText \
+                       or "reinicia el equipo " in myText or "reinicia el sistema " in myText \
+                       or "reinicia la sesión" in myText:
             respuesta = "De una, voy a reiniciar tu ordenador. Espera mientras lo hago, no tardo nada."
             tts(respuesta, "reboot", False, "", run)
 
-        case myText if myText == "bloquea el PC " or myText == "bloquea el ordenador " \
-                       or myText == "bloquea el equipo " or myText == "bloquea el sistema " \
-                       or myText == "bloquea la sesión":
+        case myText if "bloquea el PC " in myText or "bloquea el ordenador " in myText \
+                       or "bloquea el equipo " in myText or "bloquea el sistema " in myText \
+                       or "bloquea la sesión" in myText:
             respuesta = "Bloqueando sesión del PC..."
             tts(respuesta, "lock", False, "", run)
 
-        case myText if myText == "suspende el PC " or myText == "suspende el ordenador " \
-                       or myText == "suspende el equipo " or myText == "suspende el sistema " \
-                       or myText == "suspende la sesión":
+        case myText if "suspende el PC " in myText or "suspende el ordenador " in myText \
+                       or "suspende el equipo " in myText or "suspende el sistema " in myText \
+                       or "suspende la sesión" in myText:
             respuesta = "Okay, poniendo el sistema en modo suspensión."
             tts(respuesta, "suspend", False, "", run)
 
         case myText if "busca en google " in myText or "busca en Google " in myText:
-            respuesta = "Vale, espera que lo busco y te lo enseño"
-            tts(respuesta, "search", False, myText[16:-1], run)
+            respuesta = "¿Qué quieres que busque exactamente?"
+            tts(respuesta, "", False, "", False)
+            with sr.Microphone() as source:
+                # r.adjust_for_ambient_noise(source=source, duration=0.5)
+                print("Di algo...")
+                if ostype == "nt":
+                    playsound(".\\audio\\startListen.wav")
+                else:
+                    playsound("./audio/startListen.wav")
+                try:
+                    audio = r.listen(source, timeout=5, phrase_time_limit=7)
+                    myText = ""
+                    try:
+                        myText = r.recognize_google(audio, language='es-ES')
+                    except Exception:
+                        if run:
+                            keystroke("hide", run)
+                        pass
+                    myText = myText + " "
+                    print(myText)
+                    if ostype == "nt":
+                        playsound(".\\audio\\stopListen.wav")
+                    else:
+                        playsound("./audio/stopListen.wav")
+                except Exception:
+                    if ostype == "nt":
+                        playsound(".\\audio\\stopListen.wav")
+                        sleep(0.2)
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/stopListen.wav")
+                        sleep(0.2)
+                        playsound("./audio/windowHide.wav")
+                    if run:
+                        keystroke("hide", run)
+                    pass
+            respuesta = "Vale, dame un segundo que lo busque"
+            tts(respuesta, "search", False, myText, run)  # myText[16:-1]
 
-        case myText if myText == "dime la hora " or myText == "qué hora es ":
+        case myText if "dime la hora " in myText or "qué hora es " in myText:
             date = datetime.now()
             respuesta = "La hora actual es " + date.time().strftime("%H:%M")
             tts(respuesta, "", False, "", run)
 
-        case myText if myText == "dime la fecha " or myText == "qué día es hoy ":
+        case myText if "dime la fecha " in myText or "qué día es hoy " in myText:
             locale.getlocale()
             date = datetime.now()
             months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
@@ -275,13 +354,58 @@ def playback(audio, active, run):
             respuesta = f"Hoy es {weekday}, {day} de {month} del {year}"
             tts(respuesta, "", False, "", run)
 
-        case myText if myText == "cambia inglés " or myText == "cambia a inglés " or myText == "change to English " \
-                       or myText == "switch to English ":
+        case myText if "cambia inglés " in myText or "cambia a inglés " in myText or "change to English " in myText \
+                       or "switch to English " in myText:
             # respuesta = "Vale, cambiando el idioma del programa principal a: Inglés"
-            respuesta = "Lo siento, pero tengo la función de cambio de idioma mediante comando de voz temporalmente " \
-                        "desactivada por un pequeño bug. Si quieres cambiar el idioma, por favor usa el icono que " \
-                        "tienes en tu bandeja del sistema."
+            respuesta = "Lo siento, pero he dejado la función de cambio de idioma mediante comando de voz " \
+                        "temporalmente desactivada por un pequeño bug que encontré hace un rato. Si quieres cambiar " \
+                        "el idioma, por favor usa el icono que tienes en tu bandeja del sistema."
             return tts(respuesta, "language", False, "", run)
+
+        case myText if "calcula " in myText or "calcula esto " in myText:
+            respuesta = "¿Cuál es la operación?"
+            tts(respuesta, "", False, "", False)
+            with sr.Microphone() as source:
+                # r.adjust_for_ambient_noise(source=source, duration=0.5)
+                print("Di algo...")
+                if ostype == "nt":
+                    playsound(".\\audio\\startListen.wav")
+                else:
+                    playsound("./audio/startListen.wav")
+                try:
+                    audio = r.listen(source, timeout=5, phrase_time_limit=10)
+                    myText = ""
+                    try:
+                        myText = r.recognize_google(audio, language='es-ES')
+                    except Exception:
+                        if run:
+                            keystroke("hide", run)
+                        pass
+                    myText = myText + " "
+                    print(myText)
+                    if ostype == "nt":
+                        playsound(".\\audio\\stopListen.wav")
+                    else:
+                        playsound("./audio/stopListen.wav")
+                except Exception:
+                    if ostype == "nt":
+                        playsound(".\\audio\\stopListen.wav")
+                        sleep(0.2)
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/stopListen.wav")
+                        sleep(0.2)
+                        playsound("./audio/windowHide.wav")
+                    if run:
+                        keystroke("hide", run)
+                    pass
+            result = sm.getResult(myText)
+            if result != "Unable to evaluate equation":
+                tts(result, "calc", False, "", run)
+            else:
+                respuesta = "Oye, creo que te has equivocado al decirme la ecuación, no soy capaz de resolverla. " \
+                            "Revísala y dímela otra vez."
+                tts(respuesta, "calc", False, "", run)
 
         case myText if "abre " in myText or "ábreme " in myText:
             respuesta = "okay, abriendo " + myText[5:-1]
@@ -323,31 +447,57 @@ def tts(audio, name, isprogram, text, run):
                 playsound("audio.mp3")
                 remove("audio.mp3")
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
 
             case "bye":
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
+                """if ostype == "nt":
+                    osd.end()"""
                 exit()
 
             case "play":
                 keystroke("play", False)
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
 
             case "previous":
                 keystroke("previous", False)
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
 
             case "next":
                 keystroke("next", False)
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
 
             case "shutdown":
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
                 if ostype == "nt":
                     system("shutdown.exe -s -t 0")
                 else:
@@ -355,7 +505,11 @@ def tts(audio, name, isprogram, text, run):
 
             case "reboot":
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
                 if ostype == "nt":
                     system("shutdown.exe -r -t 0")
                 else:
@@ -363,7 +517,11 @@ def tts(audio, name, isprogram, text, run):
 
             case "lock":
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
                 if ostype == "nt":
                     system("rundll32.exe user32.dll,LockWorkStation")
                 else:
@@ -371,7 +529,11 @@ def tts(audio, name, isprogram, text, run):
 
             case "suspend":
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
                 if ostype == "nt":
                     system("powercfg -h off")
                     system("rundll32.exe powrProf.dll, SetSuspendState Sleep")
@@ -380,7 +542,11 @@ def tts(audio, name, isprogram, text, run):
 
             case "language":
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
 
             case "language2":
                 f = open("config.ini", "w")
@@ -397,11 +563,19 @@ def tts(audio, name, isprogram, text, run):
             case "search":
                 system("python -m webbrowser -t \"https://google.es/search?q=" + text.replace(" ", "+") + "\"")
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
 
             case _:
                 if run:
-                    keystroke("", run)
+                    keystroke("hide", run)
+                    if ostype == "nt":
+                        playsound(".\\audio\\windowHide.wav")
+                    else:
+                        playsound("./audio/windowHide.wav")
 
     except Exception:
         pass
@@ -409,7 +583,7 @@ def tts(audio, name, isprogram, text, run):
 
 def app(program):
     if ostype == "nt":
-        path = "\"..\\Links\\" + program + ".lnk\""
+        path = "\".\\programs\\" + program + ".lnk\""
         popen(path)
     else:
         pass
@@ -439,6 +613,12 @@ def keystroke(media, run):
             Keyboard.release(Key.shift)
             Keyboard.release("a")
 
+        case "show":
+            osd.show()
+
+        case "hide":
+            osd.hide()
+
         case _:
             if run:
                 Keyboard.press(Key.ctrl)
@@ -453,18 +633,27 @@ def keystroke(media, run):
 
 def background(origen, run):
     global exiting
-    """global llamada
-    if callback:
-        llamada = True
-        calling = start(1, True, run)
-        llamada = False
-        return calling
-    else:"""
     try:
         audio = r.listen(origen, timeout=7, phrase_time_limit=3)
         myText = r.recognize_google(audio, language='es-ES', show_all=False)
-        myText = myText.split(' ')
-        print(myText)
+        match myText:
+            case myText if "Adri" in myText:
+                myText = str(myText).replace("Adri", "ADI")
+                print(myText)
+            case myText if "Javi" in myText:
+                myText = str(myText).replace("Javi", "ADI")
+                print(myText)
+            case myText if "a ti" in myText:
+                myText = str(myText).replace("a ti", "ADI")
+                print(myText)
+            case myText if "osiadie" in myText:
+                myText = str(myText).replace("osiadie", "ADI")
+                print(myText)
+            case myText if "oyaji" in myText:
+                myText = str(myText).replace("oyaji", "ADI")
+                print(myText)
+            case _:
+                print(myText)
         for i in keywords:
             if i in myText:
                 return start(1, True, run)
@@ -486,7 +675,7 @@ def change(icono=icon):
             f"mayus_notifier = {str(mayus_notifier)}\n"
             f"mayus_audio = {str(mayus_audio)}\n--EOF--")
     f.close()
-    keystroke("", sao)
+    keystroke("hide", sao)
     icono.stop()
 
 
@@ -497,17 +686,25 @@ def close(icono=icon):
 def tray():
     global returned2
     global icon
+    global mayus
+    global scroll
+    global num
     keyboard.add_hotkey('capslock', lambda: caps_notifications(icon))
     if ostype == "nt":
-        image = Image.open(".\\LOGO-ADY.png")
+        # keyboard.add_hotkey('capslock', lambda: osd.caps_lock(mayus))
+        # keyboard.add_hotkey('scrlk', lambda: osd.scroll_lock(scroll))
+        # keyboard.add_hotkey('numlock', lambda: osd.num_lock(num))
+        image = Image.open(".\\image\\LOGO-ADY.png")
     else:
-        image = Image.open("./LOGO-ADY.png")
+        image = Image.open("./image/LOGO-ADY.png")
     menu = (item('Change to: English', lambda: change(icon), visible=True),
             item('Activar/Desactivar notificador de Mayus', lambda: caps_config("notifier"), visible=True),
             item('Activar/Desactivar dictado de Mayus', lambda: caps_config("audio"), visible=True),
             item('Salir', lambda: close(icon), visible=True))
     icon = pystray.Icon("Ady", image, "A-D-Y", menu)
     icon.run()
+    """if ostype == "nt":
+        osd.end()"""
     exit()
 
 
@@ -533,7 +730,7 @@ def initial(run):
     t2 = threading.Thread(target=__init__)
     t2.daemon = True
     t2.start()
-    t3 = threading.Thread(target=caps_check)
+    t3 = threading.Thread(target=locks_check)
     t3.daemon = True
     t3.start()
     while True:
@@ -542,8 +739,12 @@ def initial(run):
             continue
         else:
             global mayus
+            global scroll
+            global num
             mayus = GetKeyState(VK_CAPITAL)
-            keyboard.unhook_all_hotkeys()
+            scroll = GetKeyState(VK_SCROLL)
+            num = GetKeyState(VK_NUMLOCK)
+            # keyboard.unhook_all_hotkeys()
             return returned2
 
 
@@ -559,23 +760,15 @@ def __init__():
         exiting = False
         return "exit"
     else:
-        """if returned == "english":
-            return returned
-        elif exiting:
-            exiting = False
-            return "exit"
-        else:"""
         sr.Recognizer()
         with sr.Microphone() as fuente:
+            r.adjust_for_ambient_noise(source=fuente, duration=0.5)
             while True:
-                if llamada:
-                    continue
+                returned2 = background(fuente, sao)
+                if returned2 == "english":
+                    return returned2
+                elif exiting:
+                    exiting = False
+                    return "exit"
                 else:
-                    returned2 = background(fuente, sao)
-                    if returned2 == "english":
-                        return returned2
-                    elif exiting:
-                        exiting = False
-                        return "exit"
-                    else:
-                        continue
+                    continue

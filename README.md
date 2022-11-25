@@ -12,7 +12,18 @@ the shortcut to open/close its interface.
 But even if you don't want to use SAO Utils, this code should work absolutely fine, but be careful if you have
 assigned the shortcut mentioned before, as ADY will use that shortcut.
 
-Before you run the A-D-Y, make sure you have installed this python libraries before:
+-------------------------------------------------------------------------------------------------------------------
+
+EVEN MORE IMPORTANT!!!!
+
+Right now, with the lastest release, I modified part of the code (as well as added new code (a lot of it)), so A-D-Y 
+has her own interface, and now she does *NOT* use SAO Utils at all.
+
+NOTE: The interface is still in a very early stage, so don't expect it to be too fancy ;)
+
+-------------------------------------------------------------------------------------------------------------------
+
+Before you run A-D-Y, make sure you have installed this python libraries:
 
 · pystray
 
@@ -22,11 +33,16 @@ Before you run the A-D-Y, make sure you have installed this python libraries bef
 
 · gTTS
 
-· playsound==1.2.2
+· playsound==1.2.2 --> DO *NOT* UPDATE
 
 · pynput
 
 · Pillow
+
+· keyboard
+
+· AVMSpeechMath --> I'm currently using a version of this library *MODIFIED* by me, but working to create this 
+                    library by myself
 
 If you want to install them automatically, you can use INSTALL_DEPENDENCIES.PY
 
@@ -43,7 +59,18 @@ Aunque, si no quieres utilizar SAO Utils, este programa debería funcionar perfe
 ten cuidado, ya que si tienes asignado el atajo anteriormente mencionado, ADY lo usará y hará lo que sea que haga ese
 atajo.
 
-Antes de ejecutar A-D-Y, asegúrate de tener instaladas estas librerías de python antes:
+-------------------------------------------------------------------------------------------------------------------
+
+AÚN MÁS IMPORTANTE!!!!
+
+En este momento, con la última versión, he modificado parte del código (además de haber añadido nuevo código (mucho)), 
+por lo que A-D-Y tiene su propia interfaz, y ahora *NO* utiliza SAO Utils para absolutamente nada.
+
+NOTA: La interfaz está todavía bastante verde, así que no esperes que sea demasiado sofisticada ;)
+
+-------------------------------------------------------------------------------------------------------------------
+
+Antes de ejecutar A-D-Y, asegúrate de tener instaladas estas librerías de python:
 
 · pystray
 
@@ -53,11 +80,16 @@ Antes de ejecutar A-D-Y, asegúrate de tener instaladas estas librerías de pyth
 
 · gTTS
 
-· playsound==1.2.2
+· playsound==1.2.2 --> *NO* ACTUALIZAR
 
 · pynput
 
 · Pillow
+
+· keyboard
+
+· AVMSpeechMath --> Estoy usando una versión de esta librería *MODIFICADA* por mí, aunque estoy trabajando para crear 
+                    la librería por mí mismo 
 
 Si quieres instalarlas automáticamente, puedes usar INSTALL_DEPENDENCIES.PY
 

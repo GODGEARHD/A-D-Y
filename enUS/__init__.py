@@ -6,6 +6,15 @@ the shortcut to open/close its interface.
 
 But even if you don't want to use SAO Utils, this code should work absolutely fine, but be careful if you have
 assigned the shortcut mentioned before, as ADY will use that shortcut.
+
+-------------------------------------------------------------------------------------------------------------------
+
+EVEN MORE IMPORTANT!!!!
+
+Right now, with the lastest release, I modified part of the code (as well as added new code (a lot of it)), so A-D-Y
+has her own interface, and now she does *NOT* use SAO Utils at all.
+
+NOTE: The interface is still in a very early stage, so don't expect it to be too fancy ;)
 """
 
 import locale
@@ -146,17 +155,17 @@ def main(active, run):
     with sr.Microphone() as origin:
         print("Say something...")
         if ostype == "nt":
-            playsound(".\\enUS\\start-listen.wav")
+            playsound(".\\audio\\startListen.wav")
         else:
-            playsound("./enUS/start-listen.wav")
+            playsound("./audio/startListen.wav")
         try:
             audio = r.listen(origin, timeout=5)
             return playback(audio, active, run)
         except Exception:
             if ostype == "nt":
-                playsound(".\\enUS\\stop-listen.wav")
+                playsound(".\\audio\\stopListen.wav")
             else:
-                playsound("./enUS/stop-listen.wav")
+                playsound("./audio/stopListen.wav")
             if run:
                 keystroke("", run)
             pass
@@ -173,50 +182,50 @@ def playback(audio, active, run):
     myText = myText + " "
     print(myText)
     if ostype == "nt":
-        playsound(".\\enUS\\stop-listen.wav")
+        playsound(".\\audio\\stopListen.wav")
     else:
-        playsound("./enUS/stop-listen.wav")
+        playsound("./audio/stopListen.wav")
 
     match myText:
 
-        case "what's up dog ":
+        case myText if "what's up dog " in myText:
             answer = "Yo! Wassup?"
             tts(answer, "", False, "", run)
 
-        case myText if myText == "f*** you b**** " or myText == "shut your b**** ass up " \
-                       or myText == "fuck you bitch " or myText == "shut your bitch ass up ":
+        case myText if "f*** you b**** " in myText or "shut your b**** ass up " in myText \
+                       or "fuck you bitch " or "shut your bitch ass up ":
             answer = "Ah nigga don't hate me cuz I'm beautiful nigga. Maybe if you got rid of that old geegee ass " \
                      "haircut you'd got some bitches on your dick. Oh, better yet, maybe Tanisha'll call your dog " \
                      "ass if she ever stop fucking with that brain surgeon or lawyer she fucking with. Niggaaa"
             tts(answer, "", False, "", run)
 
-        case "shut yourself down ":
+        case myText if "shut yourself down " in myText:
             answer = "All right, if you need something from me, just tap the green button on the top left corner " \
                      "in SAO Utils. See you!"
             tts(answer, "bye", False, "", run)
 
-        case myText if myText == "shut up " or myText == "cállate " or myText == "nothing ":
+        case myText if "shut up " in myText or "cállate " in myText or "nothing " in myText:
             answer = "All right, if you need something just let me know."
             tts(answer, "", False, "", run)
 
-        case myText if myText == "put the music " or myText == "hit play " or myText == "put music ":
+        case myText if "put the music " in myText or "hit play " in myText or "put music " in myText:
             answer = "Okay, playing multimedia"
             tts(answer, "play", False, "", run)
 
-        case myText if myText == "stop the music " or myText == "hit pause ":
+        case myText if "stop the music " in myText or "hit pause " in myText:
             answer = "Gucci, pausing multimedia"
             tts(answer, "play", False, "", run)
 
-        case myText if myText == "go to the next song " or myText == "pasa a otra canción " or myText == "next song ":
+        case myText if "go to the next song " in myText or "pasa a otra canción " in myText or "next song " in myText:
             answer = "Okay, going to the next song in the list"
             tts(answer, "next", False, "", run)
 
-        case myText if myText == "go to the previous song " or myText == "put the last song " \
-                       or myText == "previous song ":
+        case myText if "go to the previous song " in myText or "put the last song " in myText \
+                       or "previous song " in myText:
             answer = "Okay, going back to the previous song"
             tts(answer, "previous", False, "", run)
 
-        case myText if myText == "present yourself " or myText == "who are you ":
+        case myText if "present yourself " in myText or "who are you " in myText:
             answer = "Ok, here I go. Hello, my name is ADY, short for \"Advanced Development auxiliarY\". I'm a " \
                  "voice assistant created by Carlos Maristegui, or End, as you prefer to call him. I'm still " \
                  "under development, but I think I'm already capable of doing interesting things. For example, " \
@@ -231,23 +240,23 @@ def playback(audio, active, run):
                  "meet you!"
             tts(answer, "presentation", False, "", run)
 
-        case myText if myText == "power off the PC " or myText == "power off the computer " \
-                       or myText == "power off the system " or myText == "power off the session":
+        case myText if "power off the PC " in myText or "power off the computer " in myText \
+                       or "power off the system " in myText or "power off the session" in myText:
             answer = "Okay, powering off the PC. See you when you turn it on again!"
             tts(answer, "", False, "", run)
 
-        case myText if myText == "restart the PC " or myText == "restart the computer " \
-                       or myText == "restart the system " or myText == "restart the session":
+        case myText if "restart the PC " in myText or "restart the computer " in myText \
+                       or "restart the system " in myText or "restart the session" in myText:
             answer = "Right I'm gonna restart your PC. Wait till I do it, it'll be just a moment."
             tts(answer, "reboot", False, "", run)
 
-        case myText if myText == "lock the PC " or myText == "lock the computer " \
-                       or myText == "lock the system " or myText == "lock the session":
+        case myText if "lock the PC " in myText or "lock the computer " in myText \
+                       or "lock the system " in myText or "lock the session" in myText:
             answer = "Locking the PC's session..."
             tts(answer, "lock", False, "", run)
 
-        case myText if myText == "put the PC to sleep " or myText == "put the computer to sleep " \
-                       or myText == "put the system to sleep " or myText == "put the session to sleep":
+        case myText if "put the PC to sleep " in myText or "put the computer to sleep " in myText \
+                       or "put the system to sleep " in myText or "put the session to sleep" in myText:
             answer = "Okay, putting the system in sleep mode."
             tts(answer, "suspend", False, "", run)
 
@@ -255,19 +264,19 @@ def playback(audio, active, run):
             answer = "Vale, espera que lo busco y te lo enseño"
             tts(answer, "search", False, myText[17:-1], run)
 
-        case myText if myText == "tell me the time " or myText == "what time is it ":
+        case myText if "tell me the time " in myText or "what time is it " in myText:
             date = datetime.now()
             answer = "Right now, it's " + date.time().strftime("%H:%M")
             tts(answer, "", False, "", run)
 
-        case myText if myText == "tell me the date " or myText == "what day is it today ":
+        case myText if "tell me the date " in myText or "what day is it today " in myText:
             locale.getlocale()
             date = datetime.now()
             answer = "Today is " + date.date().strftime("%A, %d of %B, %Y")
             tts(answer, "", False, "", run)
 
-        case myText if myText == "switch to Spanish " or myText == "change to Spanish " or myText == "cambia español " \
-                       or myText == "cambia a español ":
+        case myText if "switch to Spanish " in myText or "change to Spanish " in myText or "cambia español " in myText \
+                       or "cambia a español " in myText:
             # answer = "Okay, switching main program's language to: Spanish"
             answer = "I'm sorry, but I have this voice command function disabled because of a minor bug. If you want " \
                      "to change language, please use the tray icon."
@@ -399,7 +408,7 @@ def tts(audio, name, isprogram, text, run):
 
 def app(program):
     if ostype == "nt":
-        path = "\"..\\Links\\" + program + ".lnk\""
+        path = "\".\\programs\\" + program + ".lnk\""
         popen(path)
     else:
         pass
@@ -435,7 +444,6 @@ def background(origen, run):
     try:
         audio = r.listen(origen, timeout=7, phrase_time_limit=3)
         myText = r.recognize_google(audio, language='en-US', show_all=False)
-        myText = myText.split(' ')
         if "80" in myText:
             print(['ADY'])
             myText = "ADY"
@@ -473,9 +481,9 @@ def tray():
     global icon
     keyboard.add_hotkey('capslock', lambda: caps_notifications(icon))
     if ostype == "nt":
-        image = Image.open(".\\LOGO-ADY.png")
+        image = Image.open(".\\image\\LOGO-ADY.png")
     else:
-        image = Image.open("./LOGO-ADY.png")
+        image = Image.open("./image/LOGO-ADY.png")
     menu = (item('Cambiar a: Español', lambda: change(icon), visible=True),
             item('Turn On/Off caps notifier', lambda: caps_config("notifier"), visible=True),
             item('Turn On/Off dictated caps', lambda: caps_config("audio"), visible=True),
@@ -532,23 +540,14 @@ def __init__():
         exiting = False
         return "exit"
     else:
-        """if returned == "spanish":
-            return returned
-        elif exiting:
-            exiting = False
-            return "exit"
-        else:"""
         sr.Recognizer()
         with sr.Microphone() as fuente:
             while True:
-                if llamada:
-                    continue
+                returned2 = background(fuente, sao)
+                if returned2 == "spanish":
+                    return returned2
+                elif exiting:
+                    exiting = False
+                    return "exit"
                 else:
-                    returned2 = background(fuente, sao)
-                    if returned2 == "spanish":
-                        return returned2
-                    elif exiting:
-                        exiting = False
-                        return "exit"
-                    else:
-                        continue
+                    continue
