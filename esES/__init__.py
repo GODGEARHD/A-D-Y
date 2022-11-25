@@ -10,7 +10,7 @@ atajo.
 
 -------------------------------------------------------------------------------------------------------------------
 
-AÚN MÁS IMPORTANTE!!!!
+AÚN MÁ S IMPORTANTE!!!!
 
 En este momento, con la última versión, he modificado parte del código (además de haber añadido nuevo código (mucho)),
 por lo que A-D-Y tiene su propia interfaz, y ahora *NO* utiliza SAO Utils para absolutamente nada.
