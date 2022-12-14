@@ -1,25 +1,31 @@
 #!/usr/bin/python
-
-import esES
-import enUS
-from os import name
-if name == "nt":
-    import wmi
-    import osd
+import os, esES, enUS, signal, psutil
+if os.name == "nt":
+    import wmi, osd
 from sys import exit
 
 running = False
 
-if name == "nt":
+if os.name == "nt":
     sao = wmi.WMI()
     for process in sao.Win32_Process():
         if "SAO Utils.exe" == process.Name:
             running = True
             break
 
+    pids = []
+    for proc in psutil.process_iter():
+        if "A-D-Y" in proc.name():
+            pids.append(proc.pid)
+    for pid in pids:
+        if pid != os.getpid():
+            os.kill(pid, signal.SIGINT)
+        else:
+            continue
+
 
 def main():
-    if name == "nt":
+    if os.name == "nt":
         config = ".\\config.ini"
     else:
         config = "./config.ini"
@@ -45,10 +51,9 @@ def main():
                     returned = enUS.initial(True)
 
                 case _:
-                    if name == "nt":
+                    if os.name == "nt":
                         osd.end()
                     exit()
                     return "exit"
-
 
 main()

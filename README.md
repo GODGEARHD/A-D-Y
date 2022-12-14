@@ -33,7 +33,7 @@ Before you run A-D-Y, make sure you have installed this python libraries:
 
 · gTTS
 
-· playsound==1.2.2 --> DO *NOT* UPDATE
+· playsound==1.2.2 --> DO *NOT* UPDATE, latter versions don't work
 
 · pynput
 
@@ -43,6 +43,8 @@ Before you run A-D-Y, make sure you have installed this python libraries:
 
 · AVMSpeechMath --> I'm currently using a version of this library *MODIFIED* by me, but working to create this 
                     library by myself
+
+· psutil
 
 If you want to install them automatically, you can use INSTALL_DEPENDENCIES.PY
 
@@ -80,7 +82,7 @@ Antes de ejecutar A-D-Y, asegúrate de tener instaladas estas librerías de pyth
 
 · gTTS
 
-· playsound==1.2.2 --> *NO* ACTUALIZAR
+· playsound==1.2.2 --> *NO* ACTUALIZAR, las últimas versiones no funcionan
 
 · pynput
 
@@ -89,7 +91,9 @@ Antes de ejecutar A-D-Y, asegúrate de tener instaladas estas librerías de pyth
 · keyboard
 
 · AVMSpeechMath --> Estoy usando una versión de esta librería *MODIFICADA* por mí, aunque estoy trabajando para crear 
-                    la librería por mí mismo 
+                    la librería por mí mismo
+
+· psutil
 
 Si quieres instalarlas automáticamente, puedes usar INSTALL_DEPENDENCIES.PY
 
