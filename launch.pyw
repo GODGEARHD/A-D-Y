@@ -1,7 +1,9 @@
 #!/usr/bin/python
 import os, esES, enUS, signal, psutil
+from modules import checkInternet
 if os.name == "nt":
-    import wmi, osd
+    import wmi
+    from modules import osd
 from sys import exit
 
 running = False
@@ -33,12 +35,22 @@ def main():
         line = file.readlines()
         match line[0]:
             case line if line[11:-1] == "'es-ES'":
-                returned = esES.initial(True)
-                print(returned)
+                internet = checkInternet.check()
+                if internet:
+                    returned = esES.initial(True)
+                    print(returned)
+                else:
+                    returned = "sin conexión a internet disponible"
+                    print(returned)
 
             case line if line[11:-1] == "'en-US'":
-                returned = enUS.initial(True)
-                print(returned)
+                internet = checkInternet.check()
+                if internet:
+                    returned = enUS.initial(True)
+                    print(returned)
+                else:
+                    returned = "no internet connection available"
+                    print(returned)
             case _:
                 print(line[11:-1])
 
@@ -55,5 +67,6 @@ def main():
                         osd.end()
                     exit()
                     return "exit"
+
 
 main()

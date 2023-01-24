@@ -27,6 +27,10 @@ Before you run A-D-Y, make sure you have installed this python libraries:
 
 · pystray
 
+· PyAudio
+
+· Pygame
+
 · wmi
 
 · SpeechRecognition
@@ -40,9 +44,6 @@ Before you run A-D-Y, make sure you have installed this python libraries:
 · Pillow
 
 · keyboard
-
-· AVMSpeechMath --> I'm currently using a version of this library *MODIFIED* by me, but working to create this 
-                    library by myself
 
 · psutil
 
@@ -76,6 +77,10 @@ Antes de ejecutar A-D-Y, asegúrate de tener instaladas estas librerías de pyth
 
 · pystray
 
+· PyAudio
+
+· Pygame
+
 · wmi
 
 · SpeechRecognition
@@ -89,9 +94,6 @@ Antes de ejecutar A-D-Y, asegúrate de tener instaladas estas librerías de pyth
 · Pillow
 
 · keyboard
-
-· AVMSpeechMath --> Estoy usando una versión de esta librería *MODIFICADA* por mí, aunque estoy trabajando para crear 
-                    la librería por mí mismo
 
 · psutil
 

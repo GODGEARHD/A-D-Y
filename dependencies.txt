@@ -1,4 +1,6 @@
 pystray
+PyAudio
+Pygame
 wmi
 SpeechRecognition
 gTTS
@@ -6,5 +8,4 @@ playsound==1.2.2 --> DO *NOT* UPDATE, latter versions don't work
 pynput
 Pillow
 keyboard
-AVMSpeechMath --> I'm currently using a version of this library *MODIFIED* by me, but working to create this library by myself
 psutil
