@@ -66,7 +66,6 @@ def main():
                     if os.name == "nt":
                         osd.end()
                     exit()
-                    return "exit"
 
 
 main()

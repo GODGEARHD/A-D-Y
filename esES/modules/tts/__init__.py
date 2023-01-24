@@ -5,6 +5,7 @@ from modules.volume import volume
 from os import system, remove, name as ostype
 from playsound import playsound
 from gtts import gTTS
+from sys import exit
 
 mayus_notifier = None
 mayus_audio = None

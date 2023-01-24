@@ -4,6 +4,7 @@ from modules.app import app
 from os import system, remove, name as ostype
 from playsound import playsound
 from gtts import gTTS
+from sys import exit
 
 mayus_notifier = None
 mayus_audio = None
